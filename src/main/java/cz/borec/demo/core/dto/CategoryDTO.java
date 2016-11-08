@@ -12,7 +12,6 @@ public class CategoryDTO extends NamedDTO {
 	private List<CategoryDTO> childCategories = new ArrayList<CategoryDTO>();
 	private boolean root;
 	private boolean secondLevel;
-	private CategoryDTO parentCategory;
 	/*private CategoryDTO parentCategory;
 
 	public void setParentCategory(CategoryDTO parentCategory) {
@@ -44,14 +43,5 @@ public class CategoryDTO extends NamedDTO {
 
 	public void setSecondLevel(boolean secondLevel) {
 		this.secondLevel = secondLevel;
-	}
-
-	public void setParentCategory(CategoryDTO parentCategory) {
-		this.parentCategory = parentCategory;
-		
-	}
-
-	public CategoryDTO getParentCategory() {
-		return parentCategory;
 	}
 }

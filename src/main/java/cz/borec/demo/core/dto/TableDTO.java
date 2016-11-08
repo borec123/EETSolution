@@ -14,8 +14,6 @@ public class TableDTO extends NamedDTO {
 	private RoomDTO roomDTO;
 	private OrderDTO orderDTO;
 	private TableType type = TableType.STANDARD;
-
-	private boolean deleted;
 	
 	public TableType getType() {
 		return type;
@@ -38,7 +36,7 @@ public class TableDTO extends NamedDTO {
 			break;
 		case HORIZONTAL:
 			width = 100;
-			height = 50;
+			height = 40;
 			break;
 		case VERTICAL:
 			width = 60;
@@ -67,11 +65,6 @@ public class TableDTO extends NamedDTO {
 		roomDTO.getTables().add(this);
 	}
 
-	public void removeRoomDTO() {
-		roomDTO.getTables().remove(this);
-		//roomDTO = null;
-	}
-
 	public TableDTO(int x, int y, int width, int height) {
 		super();
 		X = x;
@@ -79,15 +72,6 @@ public class TableDTO extends NamedDTO {
 		this.width = width;
 		this.height = height;
 		//orderDTO = new OrderDTO();
-	}
-
-	public void setDeleted(boolean b) {
-		deleted = b;
-		
-	}
-
-	public boolean isDeleted() {
-		return deleted;
 	}
 
 
