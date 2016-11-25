@@ -63,6 +63,7 @@ public class TableHistoryPane extends AbstractPaneBase {
 	public TableHistoryPane(Controller controller) throws JAXBException, InvalidKeyException, UnrecoverableKeyException, KeyStoreException, NoSuchAlgorithmException, CertificateException, FileNotFoundException, IOException {
 		super(controller);
 		fIClient = FIClientOpenEET.getInstance();
+		fIClient.setController(controller);
 	}
 
 	@Override
@@ -120,6 +121,7 @@ public class TableHistoryPane extends AbstractPaneBase {
 		BorderPane pane = new BorderPane();
 		table = new TableView<OrderDTO>();
 		table.setBackground(Settings.getBackground());
+		table.setPlaceholder(new javafx.scene.control.Label(""));
 		date = new TableColumn<OrderDTO, Date>(
 				"Datum a \u010Das");
 		date.setCellValueFactory(new PropertyValueFactory("date"));

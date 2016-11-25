@@ -1,0 +1,9 @@
+#kokot {
+    -fx-background-color: red; /* #462DFF; */
+    -fx-background-radius: 0;
+    -fx-background-insets: 0,1,2,3,0;
+    -fx-text-fill: white;
+    -fx-font-family: "Arial";
+    -fx-font-size: 14px;
+    -fx-padding: 10 20 10 20;
+}

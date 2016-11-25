@@ -12,18 +12,20 @@ import java.util.Date;
 
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-
+import javafx.stage.Stage;
 import javax.xml.bind.JAXBException;
 
 import org.springframework.context.ApplicationContext;
 
 import cz.borec.demo.AppProperties;
+import cz.borec.demo.Constants;
 import cz.borec.demo.Context;
 import cz.borec.demo.core.dto.OrderDTO;
 import cz.borec.demo.core.dto.ProductDTO;
 import cz.borec.demo.core.dto.SummarizedOrderDTO;
 import cz.borec.demo.core.dto.TableDTO;
 import cz.borec.demo.core.entity.SalesProductEntity;
+import cz.borec.demo.gui.controls.AppPropertiesProxy;
 import cz.borec.demo.gui.notifier.Notifier;
 import cz.borec.demo.service.ServiceInterface;
 
@@ -43,6 +45,8 @@ public class Controller {
 	private TableHistoryPane tableHistoryPane;
 	private ProductDetailPane productDetailPane;
 	private SalesProductDetailPane salesProductDetailPane;
+	private CategoryPane categoryPane;
+	private SettingsPane settingsPane;
 
 	private OrderDTO order;
 
@@ -62,29 +66,38 @@ public class Controller {
 
 	private Notifier notifier = new Notifier();
 
-	public Controller(final Scene scene) throws JAXBException, InvalidKeyException, UnrecoverableKeyException,
+	private Stage primaryStage;
+	//private AppPropertiesProxy appPropertiesProxy ;
+
+	public Controller(final Scene scene, Stage primaryStage) throws JAXBException, InvalidKeyException, UnrecoverableKeyException,
 			KeyStoreException, NoSuchAlgorithmException, CertificateException, FileNotFoundException, IOException {
 		ApplicationContext applicationContext = Context.getApplicationContext();
 
 		model = (ServiceInterface) applicationContext.getBean("ServiceImpl");
 		this.scene = scene;
-		productSearchPaneSalesProductsOrders = new ProductSearchPaneSalesProductsOrders(this, model.getAllCategories());
-		productSearchPaneProducts = new ProductSearchPaneProducts(this, model.getAllCategories());
-		productSearchPaneStore = new ProductSearchPaneStore(this, model.getAllCategories());
+		this.primaryStage = primaryStage;
+		productSearchPaneSalesProductsOrders = new ProductSearchPaneSalesProductsOrders(this, model.getAllCategories(false));
+		productSearchPaneProducts = new ProductSearchPaneProducts(this, model.getAllCategories(false));
+		productSearchPaneStore = new ProductSearchPaneStore(this, model.getAllCategories(false));
 		mainPane = new MainPane(this);
 		roomsPane = new RoomsPane(this, model.getAllRooms());
-		tablePane = new TablePane2(this, model.getAllCategories());
+		tablePane = new TablePane2(this, model.getAllCategories(false));
 		switchTableRoomsPane = new SwitchTableRoomsPane(this, model.getAllRooms());
 		tableHistoryPane = new TableHistoryPane(this);
 		productDetailPane = new ProductDetailPane(this, model.getAllUnits());
-		productSalesSearchPane = new ProductSearchPaneSalesProducts(this, model.getAllCategories());
+		productSalesSearchPane = new ProductSearchPaneSalesProducts(this, model.getAllCategories(false));
 		salesProductDetailPane = new SalesProductDetailPane(this);
-		productSearchPaneForSalesProducts = new ProductSearchPaneForSalesProducts(this, model.getAllCategories());
+		productSearchPaneForSalesProducts = new ProductSearchPaneForSalesProducts(this, model.getAllCategories(false));
 		salesProductEnterAmountPane = new SalesProductEnterAmountPane(this);
 		storeIncomePane = new StoreIncomePane(this);
 		historyPane = new HistoryPane(this);
 		searchParametersPane = new SearchParametersPane(this);
-		partialPaymentPane = new PartialPaymentPane(this, model.getAllCategories());
+		partialPaymentPane = new PartialPaymentPane(this, model.getAllCategories(false));
+		categoryPane = new CategoryPane(this, model.getAllCategories(false));
+		settingsPane = new SettingsPane(this);
+		//appPropertiesProxy = new AppPropertiesProxy(model);
+		
+		
 		// javafx.application.Platform.runLater(new Runnable() {
 		/*
 		 * new Thread(new Runnable() { private static final long TEN_SECONDS =
@@ -97,7 +110,7 @@ public class Controller {
 		 * throw new RuntimeException(e); } } } }).start();
 		 */
 
-		if (AppProperties.getProperties().isMultiNoded()) {
+		if (Boolean.parseBoolean(AppPropertiesProxy.get(Constants.CONFIG_IS_MULTINODED))) {
 			javafx.concurrent.Task task = new javafx.concurrent.Task<Void>() {
 				private static final long TEN_SECONDS = 10000;
 
@@ -137,6 +150,10 @@ public class Controller {
 			};
 			new Thread(task).start();
 		}
+	}
+
+	public Stage getPrimaryStage() {
+		return primaryStage;
 	}
 
 	public void mainMenu() {
@@ -182,7 +199,7 @@ public class Controller {
 
 	public void productSearchPane(OrderDTO orderDTO) {
 		productSearchPaneSalesProductsOrders.setOrder(orderDTO);
-		productSearchPaneSalesProductsOrders.setCategories(model.getAllCategories());
+		productSearchPaneSalesProductsOrders.setCategories(model.getAllCategories(false));
 		scene.setRoot(productSearchPaneSalesProductsOrders);
 	}
 
@@ -305,6 +322,13 @@ public class Controller {
 		scene.setRoot(searchParametersPane);
 
 	}
+	
+	public void categoryPane() {
+		scene.setRoot(categoryPane);
+
+	}
+	
+	
 
 	public void partialPaymentPane(OrderDTO orderDTO) {
 		partialPaymentPane.setTable(tablePane.getTable());
@@ -322,4 +346,22 @@ public class Controller {
 		//tablePane();
 	}
 
+/*	public AppPropertiesProxy getAppPropertiesProxy() {
+		return appPropertiesProxy;
+	}
+*/
+	public void resetCategories() {
+		tablePane.resetCategories();
+		//...
+	}
+
+	public void settingsPane() {
+		//model.loadProperties();
+		settingsPane.loadProperties();
+		scene.setRoot(settingsPane);
+	}
+
+	public void setError(int i) {
+		mainPane.setError(i);
+	}
 }

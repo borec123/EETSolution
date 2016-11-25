@@ -50,6 +50,17 @@ public class TableEntity extends BaseEntity<Long> {
     @Column
 	public int height;
 
+	@Column(name="deleted", nullable=false)
+	private boolean deleted = false;
+
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
 
 	public int getX() {
 		return X;

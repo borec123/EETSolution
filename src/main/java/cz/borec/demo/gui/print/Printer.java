@@ -1,8 +1,10 @@
 package cz.borec.demo.gui.print;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
+import net.sf.jasperreports.engine.JRException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.print.PageLayout;
@@ -44,31 +46,32 @@ public class Printer {
 	
 	protected void printInternal(OrderDTO orderDTO) {
 
-		GridPane root = createPane(orderDTO);
-		if(! AppProperties.getProperties().print()) {
-			AlertHelper.showModalDialog(root, "Tisk");
-		}
-		else {
-			executePrint(root);
-		}
-
-		// root.getTransforms().add(new Scale(0.7, 1.3));
-		//executePrint(root);
-
-		/*
-		 * javafx.print.PrinterJob job = javafx.print.PrinterJob
-		 * .createPrinterJob(); if (job != null) { boolean success =
-		 * job.printPage(root); if (success) { job.endJob(); } else { Alert
-		 * alert = new Alert(AlertType.ERROR);
-		 * alert.setTitle("Chybov\u00E1 zpr\u00E1va");
-		 * alert.setHeaderText("Chyba tisku."); //
-		 * alert.setContentText("I have a great message for you!");
-		 * alert.showAndWait(); } }
-		 */
+		printJasper(orderDTO);
+		
 
 	}
 
+	PrintServiceApp printService = new PrintServiceApp();
+	
+	private void printJasper(OrderDTO orderDTO) {
+		ArrayList<String> header = BillBuilder.getHeader(orderDTO);
+		ArrayList<String[]> lines = BillBuilder.getLines(orderDTO);
+		ArrayList<String> footer = BillBuilder.getFooter(orderDTO);
+		printService.setHeader(header);
+		printService.setLines(lines);
+		printService.setFooter(footer);
+		try {
+			printService.fill();
+			//printService.print();
+		} catch (JRException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	private GridPane createPane(OrderDTO orderDTO) {
+		
+		
 		Collection<OrderItemDTO> items = orderDTO.getItems();
 		GridPane root = new GridPane();
 		root.setHgap(0);
@@ -191,11 +194,11 @@ public class Printer {
 		root.add(hbox, 2, index++);
 		}
 		//---
-		root.add(new PrintLabel("Cena bez DPH 15%"), 0, index);
+		root.add(new PrintLabel("DPH 21%"), 0, index);
 
 		root.add(new PrintLabel(""), 1, index);
 
-		PrintLabel lab2 = new PrintLabel(orderDTO.getSumWithoutVat().toString());
+		PrintLabel lab2 = new PrintLabel(orderDTO.getVatAmount().toString());
 		hbox = new HBox();
 		hbox.setAlignment(Pos.CENTER_RIGHT);
 		hbox.getChildren().add(lab2);
@@ -355,6 +358,11 @@ public class Printer {
 	private void executePrint(Node node) {
 		
 		javafx.print.Printer printer = javafx.print.Printer.getDefaultPrinter();
+		System.out.println("WIDTH: " + printer.getDefaultPageLayout().getPrintableWidth());
+		System.out.println("HEIGHT: " + printer.getDefaultPageLayout().getPrintableHeight());
+		
+		
+		
 		// Paper.JAPANESE_POSTCARD = 100mm => pageLayout.getPrintableWidth() * 0.76
         //PageLayout pageLayout = printer.createPageLayout(Paper.A4, PageOrientation.PORTRAIT, javafx.print.Printer.MarginType.HARDWARE_MINIMUM);
         PageLayout pageLayout = printer.createPageLayout(Paper.JAPANESE_POSTCARD, PageOrientation.PORTRAIT, 0, 0, 10, 10);

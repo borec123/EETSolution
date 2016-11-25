@@ -12,7 +12,7 @@ import cz.borec.demo.core.entity.OrderItemEntity;
 
 public interface OrderItemRepository extends GenericJpaRepository<OrderItemEntity, Long> {
 
-	@Query("SELECT o.product, sum(o.amount), sum(o.amount*o.price) AS a FROM OrderItemEntity o WHERE o.order.date is not null AND o.order.date >= :from AND o.order.date <= :to AND o.order.payed = true GROUP BY o.product ORDER BY a DESC")
+	@Query("SELECT o.product, sum(o.amount), sum(o.amount*o.price) AS a, sum(o.vatValue) FROM OrderItemEntity o WHERE o.order.date is not null AND o.order.date >= :from AND o.order.date <= :to AND o.order.payed = true GROUP BY o.product ORDER BY a DESC")
 	List<Object> getSalesHistory(@Param("from") Date from, @Param("to") Date to);
 
 }

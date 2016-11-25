@@ -1,8 +1,6 @@
 package cz.borec.demo.ws;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -31,12 +29,11 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-import javax.xml.soap.Name;
+import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPElement;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
@@ -47,16 +44,12 @@ import org.apache.xml.security.signature.XMLSignature;
 import org.apache.xml.security.transforms.Transforms;
 import org.apache.xml.security.utils.XMLUtils;
 import org.springframework.oxm.XmlMappingException;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.core.WebServiceMessageCallback;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapMessage;
-import org.springframework.xml.transform.StringSource;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -79,11 +72,9 @@ import cz.mfcr.fs.eet.schema.v2.TrzbaHlavickaType;
 import cz.mfcr.fs.eet.schema.v2.TrzbaKontrolniKodyType;
 import cz.mfcr.fs.eet.schema.v2.TrzbaType;
 
-import javax.xml.namespace.QName;
 
 
-
-@Service
+//@Service
 public class FIClient {
 
 	// private static final String URI = "http://localhost:8088/mockEETSOAP";

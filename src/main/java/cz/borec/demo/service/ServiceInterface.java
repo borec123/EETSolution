@@ -11,8 +11,6 @@ import cz.borec.demo.core.dto.ProductDTO;
 import cz.borec.demo.core.dto.RoomDTO;
 import cz.borec.demo.core.dto.SummarizedOrderDTO;
 import cz.borec.demo.core.dto.TableDTO;
-import cz.borec.demo.core.entity.OrderEntity;
-import cz.borec.demo.core.entity.ProductEntity;
 import cz.borec.demo.core.entity.SalesProductEntity;
 import cz.borec.demo.core.entity.UnitEntity;
 
@@ -33,7 +31,7 @@ public interface ServiceInterface {
 	
 	public List<ProductDTO> getAllProducts();
 
-	public List<CategoryDTO> getAllCategories();
+	public List<CategoryDTO> getAllCategories(boolean reloadFromDatabase);
 
 	public long createProduct(ProductDTO productDTO);
 
@@ -54,7 +52,7 @@ public interface ServiceInterface {
 
 	public List<ProductDTO> getProductsByCategoryId(Long idCategory);
 
-	public CategoryDTO getCategoryById(Long id);
+	//public CategoryDTO getCategoryById(Long id);
 
 	public OrderDTO getOrderById(Long id);
 
@@ -99,5 +97,23 @@ public interface ServiceInterface {
 	public List<OrderDTO> findNotStornoedOrders();
 
 	public TableDTO getTableById(Long id);
+
+	public void updateCategory(CategoryDTO category);
+
+	public void deleteCategory(CategoryDTO cat);
+
+	public void deleteOrderItem(OrderItemDTO o);
+
+	public void deleteOrderItems(OrderDTO orderDecreasedDTO);
+	
+	/*
+	public void saveOrUpdateConfig(ConfigEntity e);
+
+	public ConfigEntity getConfig(String id);
+
+	public void loadProperties();
+	
+	public String getProperty(String id) ;
+	*/
 
 }

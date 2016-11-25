@@ -34,6 +34,7 @@ public class TableConvertor extends BaseConvertor<TableDTO, TableEntity> {
 				ord.setTable(dto);
 			}
 		}
+		dto.setDeleted(entity.isDeleted());
 		return dto;
 	}
 
@@ -51,6 +52,7 @@ public class TableConvertor extends BaseConvertor<TableDTO, TableEntity> {
 		ent.setWidth(dto.width);
 		ent.setX(dto.X);
 		ent.setY(dto.Y);
+		ent.setDeleted(dto.isDeleted());
 		return ent;
 	}
 

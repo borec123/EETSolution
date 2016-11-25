@@ -3,6 +3,7 @@ package cz.borec.demo.core.dto;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import cz.borec.demo.DPH;
 import cz.borec.demo.core.entity.SalesProductEntity;
 
 
@@ -15,6 +16,8 @@ public class OrderItemDTO extends BaseDTO<Long> implements AmountObject {
     private OrderDTO order;
     private Integer amount;
     private BigDecimal price = null;
+
+	private BigDecimal vatValue;
     
     public Integer getAmount() {
 		return amount;
@@ -84,5 +87,25 @@ public class OrderItemDTO extends BaseDTO<Long> implements AmountObject {
 		price = price2;
 		
 	}
+	
+	public void calculateVat() {
+		//TODO if (AppProperstiesProxy.isDPHEnabled()) {
+		vatValue = getPriceTotal().multiply(product.getVat()).setScale(2, BigDecimal.ROUND_UP);
+	}
+
+	public BigDecimal getVatValue() {
+		return vatValue;
+	}
+
+
+	public void setVatValue(BigDecimal vatValue) {
+		this.vatValue = vatValue;
+	}
+
+	public DPH getKokot() {
+		DPH k = product.getCategory().getVat();
+		return k ;
+	}
+
 
 }

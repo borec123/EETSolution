@@ -46,6 +46,8 @@ public class OrderDTO extends BaseDTO<Long> {
 
 	private String FIKStorno;
 
+	private List<OrderItemDTO> deletedItems;
+
     public void setPayed(boolean payed) {
 		this.payed = payed;
 	}
@@ -82,8 +84,15 @@ public class OrderDTO extends BaseDTO<Long> {
 		super();
 	}
 
-	public BigDecimal getSumWithoutVat() {
-    	return (getSumAfterDiscount().multiply(new BigDecimal(0.85))).setScale(2, BigDecimal.ROUND_UP);
+	public BigDecimal getVatAmount() {
+    	//return (getSumAfterDiscount().multiply(new BigDecimal(0.21))).setScale(2, BigDecimal.ROUND_UP);
+		
+		//TODO count with discount...
+    	BigDecimal sum = BigDecimal.valueOf(0L);
+    	for (OrderItemDTO item : getItemMap().values()) {
+    		sum = sum.add(item.getVatValue());
+		}
+    	return sum;
     }
     
     public Date getDate() {
@@ -106,7 +115,7 @@ public class OrderDTO extends BaseDTO<Long> {
 		return getItemMap().values();
 	}
 
-	public HashMap<Long, OrderItemDTO> getItemMap() {
+	public LinkedHashMap<Long, OrderItemDTO> getItemMap() {
 		if(items == null) {
 			items = new LinkedHashMap<Long, OrderItemDTO>();
 		}
@@ -117,12 +126,14 @@ public class OrderDTO extends BaseDTO<Long> {
 		if(items.containsKey(product.getId())) {
 			OrderItemDTO orderItem = items.get(product.getId());
 			orderItem.incrementAmount();
+			orderItem.calculateVat();
 		}
 		else {
 			OrderItemDTO value = new OrderItemDTO();
-			value.setAmount(1);
 			value.setOrder(this);
 			value.setProduct(product);
+			value.setAmount(1);
+			value.calculateVat();
 			items.put(product.getId(), value );
 		}
 	}
@@ -229,6 +240,18 @@ public class OrderDTO extends BaseDTO<Long> {
 
 	public String getFIKStorno() {
 		return FIKStorno;
+	}
+
+	public void setItemMap(LinkedHashMap<Long, OrderItemDTO> itemMap) {
+		this.items = itemMap;
+		
+	}
+
+	public List<OrderItemDTO> getDeletedItems() {
+		if(deletedItems == null) {
+			deletedItems = new ArrayList<OrderItemDTO>();
+		}
+		return deletedItems;
 	}
 	
 }

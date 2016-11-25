@@ -48,6 +48,9 @@ public class OrderItemEntity extends BaseEntity<Long> {
     @Column(name="price", nullable=false, length=Constants.MAX_PRICE)
     private BigDecimal price;
 
+    @Column(name="vatValue", nullable=false, length=Constants.MAX_PRICE)
+    private BigDecimal vatValue;
+
     public BigDecimal getPrice() {
 		return price;
 	}
@@ -96,4 +99,14 @@ public class OrderItemEntity extends BaseEntity<Long> {
 		this.product = product;
 	}
 
+
+	public BigDecimal getVatValue() {
+		return vatValue;
+	}
+
+
+	public void setVatValue(BigDecimal vatValue) {
+		this.vatValue = vatValue;
+	}
+	
 }
