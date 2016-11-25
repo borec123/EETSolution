@@ -6,9 +6,9 @@
 	<!-- <parent> <groupId>eu.ibacz.project</groupId> <artifactId>portlet-application</artifactId> 
 		<version>1.0-SNAPSHOT</version> </parent> -->
 	<artifactId>EETSolution</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.1_TRIAL</version>
 	<name>demo</name>
-	<description>Demo for agel.</description>
+	<description>EETSolution trial.</description>
 
 	<!-- <plugin> <artifactId>maven-surefire-plugin</artifactId> <version>2.3</version> 
 		</plugin> -->
