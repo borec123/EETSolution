@@ -1,4 +1,4 @@
-package cz.borec.demo.gui;
+/*package cz.borec.demo.gui;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -156,12 +156,12 @@ public class ProductSearchPaneSalesProducts extends AbstractPaneBase {
 	protected TableColumn<SalesProductEntity, Boolean> offerCol;
 	//private List<CategoryDTO> selectedSubCategories;
 
-	/*
+	
 	 * @Override protected void fillHorizontalBox(HBox hbox) { Button buttonMenu
 	 * = createMenuButton(); hbox.getChildren().add(buttonMenu); BlueText arrow
 	 * = new BlueText("\u2192"); hbox.getChildren().add(arrow); BlueText label =
 	 * new BlueText("Produkty"); hbox.getChildren().add(label); }
-	 */
+	 
 	@Override
 	protected void fillVBox(javafx.scene.layout.GridPane vbox) {
 		// title.setFont(Font.font("Arial", FontWeight.BOLD, 14));
@@ -171,13 +171,13 @@ public class ProductSearchPaneSalesProducts extends AbstractPaneBase {
 			SubCategoryButton options[] = createHyperlinks(categories);
 			fillWithHyperlinks(options);
 		}
-		/*
+		
 		 * Hyperlink options[] = new Hyperlink[] { new Hyperlink("Sales"), new
 		 * Hyperlink("Marketing"), new Hyperlink("Distribution"), new
 		 * Hyperlink("Costs")};
 		 * 
 		 * fillWithHyperlinks(options);
-		 */
+		 
 	}
 
 	@Override
@@ -187,11 +187,11 @@ public class ProductSearchPaneSalesProducts extends AbstractPaneBase {
 			HBox hbox = new HBox();
 			hbox.setPadding(new Insets(8, 10, 5, 0));
 			hbox.setSpacing(10);
-			/*
+			
 			 * hbox.getChildren().add(new BlueText("Po\u010Det kus\u016F: ",
 			 * 15)); textCount = new BlueText("0", 18);
 			 * hbox.getChildren().add(this.textCount);
-			 */
+			 
 			hbox.getChildren().add(new BlueText("Kategorie: ", 15));
 			categoryText = new BlueText(" -- ", 15);
 			hbox.getChildren().add(categoryText);
@@ -200,7 +200,7 @@ public class ProductSearchPaneSalesProducts extends AbstractPaneBase {
 			borderPane.setCenter(createMainPane());
 			return borderPane;
 
-			/*
+			
 			 * GridPane grid = new GridPane(); grid.setHgap(10);
 			 * grid.setVgap(10); grid.setPadding(new Insets(0, 10, 0, 10));
 			 * 
@@ -239,7 +239,7 @@ public class ProductSearchPaneSalesProducts extends AbstractPaneBase {
 			 * grid.add(servicesPercent, 3, 2);
 			 * 
 			 * return grid;
-			 */ }
+			  }
 	}
 
 	public void setCategories(List<CategoryDTO> allCategories) {
@@ -254,9 +254,9 @@ public class ProductSearchPaneSalesProducts extends AbstractPaneBase {
 		fillVBox(vbox);
 	}
 
-	/*
+	
 	 * protected abstract TableCell<ProductDTO, Boolean> getButtonCell();
-	 */
+	 
 
 	protected Node createMainContent() {
 
@@ -326,3 +326,4 @@ public class ProductSearchPaneSalesProducts extends AbstractPaneBase {
 	}
 
 }
+*/

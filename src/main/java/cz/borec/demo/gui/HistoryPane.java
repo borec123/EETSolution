@@ -21,7 +21,6 @@ import cz.borec.demo.gui.controls.BlueText;
 import cz.borec.demo.gui.controls.LiveButton;
 import cz.borec.demo.gui.controls.Settings;
 import cz.borec.demo.gui.print.SummarizedPrinter;
-import cz.borec.demo.ws.FIClient;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;

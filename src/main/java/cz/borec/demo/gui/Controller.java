@@ -27,7 +27,6 @@ import cz.borec.demo.core.dto.SummarizedOrderDTO;
 import cz.borec.demo.core.dto.TableDTO;
 import cz.borec.demo.core.entity.SalesProductEntity;
 import cz.borec.demo.gui.controls.AppPropertiesProxy;
-import cz.borec.demo.gui.notifier.Notifier;
 import cz.borec.demo.service.ServiceInterface;
 
 public class Controller {
@@ -36,7 +35,7 @@ public class Controller {
 
 	private ServiceInterface model;
 
-	private ProductSearchPaneSalesProductsOrders productSearchPaneSalesProductsOrders;
+	//private ProductSearchPaneSalesProductsOrders productSearchPaneSalesProductsOrders;
 	private ProductSearchPaneProducts productSearchPaneProducts;
 	private ProductSearchPaneStore productSearchPaneStore;
 	private RoomsPane roomsPane;
@@ -47,13 +46,10 @@ public class Controller {
 	private ProductDetailPane productDetailPane;
 	private SalesProductDetailPane salesProductDetailPane;
 	private CategoryPane categoryPane;
-	private SettingsPane settingsPane;
 
 	private OrderDTO order;
 
-	private ProductSearchPaneSalesProducts productSalesSearchPane;
-
-	private ProductSearchPaneForSalesProducts productSearchPaneForSalesProducts;
+	//private ProductSearchPaneSalesProducts productSalesSearchPane;
 
 	private SalesProductEnterAmountPane salesProductEnterAmountPane;
 
@@ -65,8 +61,6 @@ public class Controller {
 
 	private PartialPaymentPane partialPaymentPane;
 
-	private Notifier notifier = new Notifier();
-
 	private Stage primaryStage;
 	//private AppPropertiesProxy appPropertiesProxy ;
 
@@ -77,7 +71,7 @@ public class Controller {
 		model = (ServiceInterface) applicationContext.getBean("ServiceImpl");
 		this.scene = scene;
 		this.primaryStage = primaryStage;
-		productSearchPaneSalesProductsOrders = new ProductSearchPaneSalesProductsOrders(this, model.getAllCategories(false));
+		//productSearchPaneSalesProductsOrders = new ProductSearchPaneSalesProductsOrders(this, model.getAllCategories(false));
 		productSearchPaneProducts = new ProductSearchPaneProducts(this, model.getAllCategories(false));
 		productSearchPaneStore = new ProductSearchPaneStore(this, model.getAllCategories(false));
 		mainPane = new MainPane(this);
@@ -86,16 +80,14 @@ public class Controller {
 		switchTableRoomsPane = new SwitchTableRoomsPane(this, model.getAllRooms());
 		tableHistoryPane = new TableHistoryPane(this);
 		productDetailPane = new ProductDetailPane(this, model.getAllUnits());
-		productSalesSearchPane = new ProductSearchPaneSalesProducts(this, model.getAllCategories(false));
+		//productSalesSearchPane = new ProductSearchPaneSalesProducts(this, model.getAllCategories(false));
 		salesProductDetailPane = new SalesProductDetailPane(this);
-		productSearchPaneForSalesProducts = new ProductSearchPaneForSalesProducts(this, model.getAllCategories(false));
 		salesProductEnterAmountPane = new SalesProductEnterAmountPane(this);
 		storeIncomePane = new StoreIncomePane(this);
 		historyPane = new HistoryPane(this);
 		searchParametersPane = new SearchParametersPane(this);
 		partialPaymentPane = new PartialPaymentPane(this, model.getAllCategories(false));
 		categoryPane = new CategoryPane(this, model.getAllCategories(false));
-		settingsPane = new SettingsPane(this);
 		//appPropertiesProxy = new AppPropertiesProxy(model);
 		
 		
@@ -177,7 +169,7 @@ public class Controller {
 
 		case ORDERS:
 			// productSearchPaneOrders.setCategories(model.getAllCategories());
-			scene.setRoot(productSearchPaneSalesProductsOrders);
+			//scene.setRoot(productSearchPaneSalesProductsOrders);
 			break;
 
 		case STORE:
@@ -189,7 +181,7 @@ public class Controller {
 		case SALES_PRODUCTS:
 			// productSearchPaneStore.setCategories(model.getAllCategories());
 			// TODO
-			scene.setRoot(productSearchPaneForSalesProducts);
+			//scene.setRoot(productSearchPaneForSalesProducts);
 			break;
 
 		default:
@@ -199,10 +191,10 @@ public class Controller {
 	}
 
 	public void productSearchPane(OrderDTO orderDTO) {
-		productSearchPaneSalesProductsOrders.setOrder(orderDTO);
+/*		productSearchPaneSalesProductsOrders.setOrder(orderDTO);
 		productSearchPaneSalesProductsOrders.setCategories(model.getAllCategories(false));
 		scene.setRoot(productSearchPaneSalesProductsOrders);
-	}
+*/	}
 
 	public void tablePane(TableDTO tableDTO) {
 		tablePane.setTable(tableDTO);
@@ -273,9 +265,9 @@ public class Controller {
 	}
 
 	public void productSalesSearchPane() {
-		productSalesSearchPane.refresh();
+/*		productSalesSearchPane.refresh();
 		scene.setRoot(productSalesSearchPane);
-
+*/
 	}
 
 	public void salesProductDetailPane(SalesProductEntity o) {
@@ -357,9 +349,7 @@ public class Controller {
 	}
 
 	public void settingsPane() {
-		//model.loadProperties();
-		settingsPane.loadProperties();
-		scene.setRoot(settingsPane);
+
 	}
 
 	public void setError(int i) {

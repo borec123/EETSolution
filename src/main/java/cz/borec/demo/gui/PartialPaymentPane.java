@@ -31,7 +31,6 @@ import cz.borec.demo.gui.controls.LiveButton;
 import cz.borec.demo.gui.controls.Settings;
 import cz.borec.demo.gui.print.Printer;
 import cz.borec.demo.util.StringUtils;
-import cz.borec.demo.ws.FIClient;
 import cz.borec.demo.ws.FIClientOpenEET;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;

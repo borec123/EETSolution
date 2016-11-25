@@ -16,12 +16,10 @@ import java.util.Map;
 
 import javax.xml.bind.JAXBException;
 
-import cz.borec.demo.AppProperties;
 import cz.borec.demo.Constants;
 import cz.borec.demo.core.dto.CategoryDTO;
 import cz.borec.demo.core.dto.OrderDTO;
 import cz.borec.demo.core.dto.OrderItemDTO;
-import cz.borec.demo.core.dto.ProductDTO;
 import cz.borec.demo.core.dto.TableDTO;
 import cz.borec.demo.core.entity.SalesProductEntity;
 import cz.borec.demo.gui.controls.AlertHelper;
@@ -36,7 +34,6 @@ import cz.borec.demo.gui.controls.Settings;
 import cz.borec.demo.gui.controls.SubCategoryButton;
 import cz.borec.demo.gui.print.Printer;
 import cz.borec.demo.util.StringUtils;
-import cz.borec.demo.ws.FIClient;
 import cz.borec.demo.ws.FIClientOpenEET;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -44,23 +41,20 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.control.ScrollPane;
 
 public class TablePane2 extends AbstractPaneBase2 {
 

@@ -15,15 +15,12 @@ import javax.xml.bind.JAXBException;
 
 import cz.borec.demo.Constants;
 import cz.borec.demo.core.dto.OrderDTO;
-import cz.borec.demo.core.dto.OrderItemDTO;
 import cz.borec.demo.core.dto.TableDTO;
-import cz.borec.demo.gui.TablePane.ButtonCell;
 import cz.borec.demo.gui.controls.AlertHelper;
 import cz.borec.demo.gui.controls.BlueText;
 import cz.borec.demo.gui.controls.LiveButton;
 import cz.borec.demo.gui.controls.Settings;
 import cz.borec.demo.gui.print.Printer;
-import cz.borec.demo.ws.FIClient;
 import cz.borec.demo.ws.FIClientOpenEET;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -38,11 +35,9 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 
 public class TableHistoryPane extends AbstractPaneBase {

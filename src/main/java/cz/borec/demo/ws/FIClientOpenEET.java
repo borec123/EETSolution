@@ -57,7 +57,6 @@ public class FIClientOpenEET {
 	private static FIClientOpenEET instance;
 	// @Autowired
 	private WebServiceTemplate webServiceTemplate;
-	private ObjectFactory factory;
 	private String cashId;
 	private String restaurantId;
 	private String customerDIC;
@@ -164,7 +163,6 @@ public class FIClientOpenEET {
 
 		uri = AppProperties.getProperties().get(Constants.CONFIG_URL).toString();
 		webServiceTemplate = new org.springframework.ws.client.core.WebServiceTemplate();
-		factory = new ObjectFactory();
 		keyStoreSigner = new KeyStoreSigner();
 
 		JAXBContext c = JAXBContext.newInstance(cz.mfcr.fs.eet.schema.v2.ObjectFactory.class.getPackage().getName(),
