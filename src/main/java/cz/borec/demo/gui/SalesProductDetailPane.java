@@ -122,6 +122,7 @@ public class SalesProductDetailPane extends AbstractPaneBase {
 		grid.add(label1, 0, 2);
 
 		table = new TableView<ProductRelationEntity>();
+		table.setPlaceholder(new javafx.scene.control.Label(""));
 		nameCol = new TableColumn<ProductRelationEntity, String>(
 				"N\u00E1zev");
 		nameCol.setCellValueFactory(new PropertyValueFactory("name"));

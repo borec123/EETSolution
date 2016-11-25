@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.apache.commons.lang.StringUtils;
 
+import cz.borec.demo.AppProperties;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -57,7 +58,7 @@ public class AlertHelper {
 
 	public static void showModalDialog(GridPane root, String title) {
 		Scene scene = new Scene(root);
-		scene.getStylesheets().add("css/style.css");
+		scene.getStylesheets().add(AppProperties.getProperties().getStyle());
 		Stage stage = new Stage();
 		stage.setTitle(title);
 		stage.setScene(scene);
@@ -72,7 +73,7 @@ public class AlertHelper {
 		else {
 			amountScene.setRoot(root);
 		}
-		amountScene.getStylesheets().add("css/style.css");
+		amountScene.getStylesheets().add(AppProperties.getProperties().getStyle());
 		Stage amountStage = new Stage();
 		amountStage.setTitle(title);
 		amountStage.setScene(amountScene);
@@ -88,7 +89,7 @@ public class AlertHelper {
 		else {
 			amountScene.setRoot(discountPane);
 		}
-		amountScene.getStylesheets().add("css/style.css");
+		amountScene.getStylesheets().add(AppProperties.getProperties().getStyle());
 		Stage amountStage = new Stage();
 		amountStage.setTitle(title);
 		amountStage.setScene(amountScene);
@@ -104,7 +105,7 @@ public class AlertHelper {
 		else {
 			amountScene.setRoot(discountPane);
 		}
-		amountScene.getStylesheets().add("css/style.css");
+		amountScene.getStylesheets().add(AppProperties.getProperties().getStyle());
 		Stage amountStage = new Stage();
 		amountStage.setTitle(title);
 		amountStage.setScene(amountScene);

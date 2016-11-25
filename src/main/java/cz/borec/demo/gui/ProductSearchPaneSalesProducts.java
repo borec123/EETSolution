@@ -262,6 +262,7 @@ public class ProductSearchPaneSalesProducts extends AbstractPaneBase {
 
 		BorderPane pane = new BorderPane();
 		table = new TableView<SalesProductEntity>();
+		table.setPlaceholder(new javafx.scene.control.Label(""));
 		nameCol = new TableColumn<SalesProductEntity, String>("N\u00E1zev");
 		nameCol.setCellValueFactory(new PropertyValueFactory("name"));
 		nameCol.setPrefWidth(250);

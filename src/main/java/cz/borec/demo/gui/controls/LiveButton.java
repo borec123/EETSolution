@@ -1,5 +1,7 @@
 package cz.borec.demo.gui.controls;
 
+import cz.borec.demo.AppProperties;
+import cz.borec.demo.Constants;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -21,36 +23,54 @@ public class LiveButton extends Button {
 	}
 
 	protected void set() {
-		//setTextFill(Color.WHITE);
-		
-	    setFont(Font.font(getFont().getName(), FontWeight.NORMAL, 14));
-	    setId(getCCSId());
+		// setTextFill(Color.WHITE);
 
-		/*setBackground(new Background(
-				new BackgroundFill(Color.LIGHTBLUE, new CornerRadii(5.0), Insets.EMPTY)));*/
-		//setPrefSize(100, 20);
+		setFont(Font.font(getFont().getName(), FontWeight.NORMAL, 14));
+		setId(getCCSId());
+
+		/*
+		 * setBackground(new Background( new BackgroundFill(Color.LIGHTBLUE, new
+		 * CornerRadii(5.0), Insets.EMPTY)));
+		 */
+		// setPrefSize(100, 20);
 		final DropShadow shadow = new DropShadow();
+		Color c;
+		if (AppProperties.getProperties().getLookId() == 2) {
+			c = Color.LIGHTGRAY;
+		} else {
+			c = Color.BLACK;
+		}
+		shadow.setColor(c);
 		setOnMousePressed(new EventHandler<MouseEvent>() {
 
 			@Override
 			public void handle(MouseEvent event) {
 				setEffect(shadow);
-				
+
 			}
 		});
-		
+
 		setOnMouseReleased(new EventHandler<MouseEvent>() {
 
 			@Override
 			public void handle(MouseEvent event) {
 				setEffect(null);
-				
+
 			}
 		});
+
+		/*
+		 * setPrefWidth(Constants.TOUCH_BUTTON_WIDTH);
+		 * setPrefHeight(Constants.TOUCH_BUTTON_HEIGHT);
+		 */
+
+		if (AppPropertiesProxy.getDisplaySize() > 1) {
+			setPrefHeight(ButtonSizeUtils.getLiveButtonHeight());
+		}
 	}
 
 	protected String getCCSId() {
-		
+
 		return "kokot";
 	}
 
@@ -59,5 +79,4 @@ public class LiveButton extends Button {
 		set();
 	}
 
-	
 }

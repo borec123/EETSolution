@@ -94,6 +94,7 @@ public class PartialPaymentPane extends AbstractPaneBase2 {
 		orderDTO = new OrderDTO();
 		orderPartialDTO = new OrderDTO();
 		fIClient = FIClientOpenEET.getInstance();
+		fIClient.setController(controller);
 	}
 
 	@Override
@@ -221,6 +222,7 @@ public class PartialPaymentPane extends AbstractPaneBase2 {
 		pane.setTop(label_order);
 		table = new TableView<OrderItemDTO>();
 		table.setBackground(Settings.getBackground());
+		table.setPlaceholder(new javafx.scene.control.Label(""));
 		lastNameCol = new TableColumn<OrderItemDTO, String>("N\u00E1zev polo\u017Eky");
 		lastNameCol.setCellValueFactory(new PropertyValueFactory("productName"));
 		lastNameCol.setPrefWidth(170);
@@ -289,8 +291,13 @@ public class PartialPaymentPane extends AbstractPaneBase2 {
 
 				if (validateCount(orderPartialDTO)) {
 					controller.getModel().saveOrderItems(orderDecreasedDTO);
-					orderDTO = orderDecreasedDTO;
+					controller.getModel().deleteOrderItems(orderDecreasedDTO);
+					
+					orderDTO.setItemMap(orderDecreasedDTO.getItemMap());
+					//controller.getModel().saveOrderItems(orderDTO);
 					//controller.getModel().createOrder(orderPartialDTO);
+					
+					
 					controller.saveOrUpdateOrder(orderPartialDTO);
 					print();
 				}
@@ -478,6 +485,14 @@ public class PartialPaymentPane extends AbstractPaneBase2 {
 					if(am > 0) {
 						orderPartialDTO.addItem(o.getProduct());
 						o.setAmount(am - 1);
+						if(o.getAmount() == 0) {
+							o.getOrder().getDeletedItems().add(o);
+							o.getOrder().getItems().remove(o);
+						}
+						else {
+							o.calculateVat();
+						}
+
 /*						controller.getModel().saveOrderItem(o, true);
 						controller.getModel().saveOrderItems(orderPartialDTO);
 */					}
@@ -514,6 +529,12 @@ public class PartialPaymentPane extends AbstractPaneBase2 {
 					if(am > 0) {
 						orderDecreasedDTO.addItem(o.getProduct());
 						o.setAmount(am - 1);
+						if(o.getAmount() == 0) {
+							o.getOrder().getItems().remove(o);
+						}
+						else {
+							o.calculateVat();
+						}
 /*						controller.getModel().saveOrderItem(o, true);
 						controller.getModel().saveOrderItems(orderPartialDTO);
 */					}

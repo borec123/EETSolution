@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
 import cz.borec.demo.Constants;
+import cz.borec.demo.DPH;
 
 
 @Entity
@@ -32,12 +33,19 @@ public class CategoryEntity extends BaseEntity<Long> {
 	@Column(name="name", nullable=false, length=Constants.STRING_NORMAL)
     private String name;
 	
-    @ManyToOne(targetEntity=CategoryEntity.class)
+	@Column(name="vat", nullable=false, length=Constants.STRING_NORMAL)
+    private String vat;
+	
+	@ManyToOne(targetEntity=CategoryEntity.class)
     @JoinColumn(name="parent_category")
 	private CategoryEntity parentCategory;
 
 	@OneToMany(mappedBy = "parentCategory")
 	private List<CategoryEntity> childCategories;
+
+	public void setChildCategories(List<CategoryEntity> childCategories) {
+		this.childCategories = childCategories;
+	}
 
 	public CategoryEntity getParentCategory() {
 		return parentCategory;
@@ -75,6 +83,14 @@ public class CategoryEntity extends BaseEntity<Long> {
 	public void setId(Long id2) {
 		id = id2;
 		
+	}
+
+    public DPH getVat() {
+		return DPH.valueOf(vat);
+	}
+
+	public void setVat(DPH vat) {
+		this.vat = vat.name();
 	}
 
 	

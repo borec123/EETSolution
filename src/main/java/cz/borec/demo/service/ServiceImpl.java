@@ -5,21 +5,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,7 +33,6 @@ import cz.borec.demo.core.entity.SalesProductEntity;
 import cz.borec.demo.core.entity.StoreIncomeEntity;
 import cz.borec.demo.core.entity.TableEntity;
 import cz.borec.demo.core.entity.UnitEntity;
-import cz.borec.demo.gui.Main;
 import cz.borec.demo.repository.CategoryRepository;
 import cz.borec.demo.repository.OrderItemRepository;
 import cz.borec.demo.repository.OrderRepository;
@@ -52,6 +43,7 @@ import cz.borec.demo.repository.SalesProductRepository;
 import cz.borec.demo.repository.StoreIncomeRepository;
 import cz.borec.demo.repository.TableRepository;
 import cz.borec.demo.repository.UnitRepository;
+import cz.borec.demo.service.convert.CategoryConvertor;
 import cz.borec.demo.service.convert.OrderConvertor;
 import cz.borec.demo.service.convert.OrderItemConvertor;
 import cz.borec.demo.service.convert.ProductConvertor;
@@ -61,17 +53,20 @@ import cz.borec.demo.service.convert.TableConvertor;
 //@Component
 @Service
 @Transactional
-public class ServiceImpl implements ServiceInterface {
+public class ServiceImpl implements ServiceInterface/*, InitializingBean*/ {
 
 	@Autowired
 	private CategoryRepository categoryRepository;
-	
+
+/*	@Autowired
+	private ConfigRepository configRepository;
+*/
 	@Autowired
 	private SalesProductRepository salesProductRepository;
 
 	@Autowired
 	private UnitRepository unitRepository;
-	
+
 	@Autowired
 	private RoomRepository roomRepository;
 
@@ -91,9 +86,9 @@ public class ServiceImpl implements ServiceInterface {
 
 	@Override
 	public List<RoomDTO> getAllRooms() {
-		//if (rooms == null) {
-			reloadRooms();
-		//}
+		// if (rooms == null) {
+		reloadRooms();
+		// }
 		return rooms;
 	}
 
@@ -251,6 +246,10 @@ public class ServiceImpl implements ServiceInterface {
 	@Autowired
 	private StoreIncomeRepository storeIncomeRepository;
 
+	private CategoryConvertor categoryConvertor = new CategoryConvertor();
+
+	private HashMap<String, String> properties;
+
 	@Override
 	@Transactional(readOnly = true)
 	public List<ProductDTO> getAllProducts() {
@@ -266,7 +265,8 @@ public class ServiceImpl implements ServiceInterface {
 
 		// LogMF.debug(LOG, "Trying to create product {0}", new
 		// Object[]{productDTO.getClass(), productDTO.getName()}); // create*
-		// metody by m�ly m�t debug/trace logovani na za��tku (co ukl�d�m) a
+		// metody by m�ly m�t debug/trace logovani na za��tku (co
+		// ukl�d�m) a
 		// info na konci
 
 		ProductEntity entity = productConvertor.convertToEntity(productDTO);
@@ -274,11 +274,12 @@ public class ServiceImpl implements ServiceInterface {
 		productRepository.flush();
 
 		// LogMF.info(LOG, "New product created: {0}", entity.getName()); //
-		// create* metody by m�ly m�t debug/trace logovani na za��tku (co
+		// create* metody by m�ly m�t debug/trace logovani na za��tku
+		// (co
 		// ukl�d�m) a info na konci
 
 		productDTO.setId(entity.getId());
-		
+
 		reloadProductsOFCategory(productDTO.getCategory());
 
 		return entity.getId();
@@ -286,8 +287,8 @@ public class ServiceImpl implements ServiceInterface {
 
 	@Override
 	// @Transactional(readOnly = true)
-	public List<CategoryDTO> getAllCategories() {
-		if (categories == null) {
+	public List<CategoryDTO> getAllCategories(boolean reloadFromDatabase) {
+		if (categories == null || reloadFromDatabase) {
 			loadCategories();
 			loadProducts();
 		}
@@ -297,8 +298,9 @@ public class ServiceImpl implements ServiceInterface {
 	private void loadProducts() {
 		products = new LinkedHashMap<Long, List<ProductDTO>>();
 		for (CategoryDTO categoryDTO : categories) {
-			for (CategoryDTO childCategoryDTO2 : categoryDTO.getChildCategories()) {
-			
+			for (CategoryDTO childCategoryDTO2 : categoryDTO
+					.getChildCategories()) {
+
 				reloadProductsOFCategory(childCategoryDTO2);
 			}
 		}
@@ -312,7 +314,8 @@ public class ServiceImpl implements ServiceInterface {
 
 	public List<CategoryDTO> loadCategories() {
 
-		List<CategoryEntity> entities = categoryRepository.findTopLevelCategories();
+		List<CategoryEntity> entities = categoryRepository
+				.findTopLevelCategories();
 		categories = new ArrayList<CategoryDTO>(entities.size());
 
 		for (CategoryEntity entity : entities) {
@@ -329,7 +332,8 @@ public class ServiceImpl implements ServiceInterface {
 
 		categoryDTO.setId(entity.getId());
 		categoryDTO.setName(entity.getName());
-		
+		categoryDTO.setVat(entity.getVat());
+
 		for (CategoryEntity category : entity.getChildCategories()) {
 			categoryDTO.getChildCategories().add(convertToDto(category));
 		}
@@ -341,8 +345,11 @@ public class ServiceImpl implements ServiceInterface {
 	@Override
 	public long createCategory(CategoryDTO categoryDTO) {
 		CategoryEntity ent = new CategoryEntity();
-		ent.setId(categoryDTO.getId());
-		ent.setName(categoryDTO.getName());
+		ent = categoryConvertor.convertToEntity(categoryDTO);
+		/*
+		 * ent.setId(categoryDTO.getId()); ent.setName(categoryDTO.getName());
+		 */
+
 		categoryRepository.save(ent);
 		categoryRepository.flush();
 
@@ -375,7 +382,8 @@ public class ServiceImpl implements ServiceInterface {
 	@Transactional
 	public long createOrder(OrderDTO orderDTO) {
 		// LogMF.debug(LOG, "Trying to create order {0}",
-		// orderDTO.getFullName()); // create* metody by m�ly m�t debug/trace
+		// orderDTO.getFullName()); // create* metody by m�ly m�t
+		// debug/trace
 		// logovani na za��tku (co ukl�d�m) a info na konci
 
 		OrderEntity entity = orderConvertor.convertToEntity(orderDTO);
@@ -389,14 +397,14 @@ public class ServiceImpl implements ServiceInterface {
 		// --- end
 
 		// LogMF.info(LOG, "New order created: {0}", entity.getFullName()); //
-		// create* metody by m�ly m�t debug/trace logovani na za��tku (co
+		// create* metody by m�ly m�t debug/trace logovani na za��tku
+		// (co
 		// ukl�d�m) a info na konci
 
 		orderDTO.setId(entity.getId());
 		return entity.getId();
 	}
 
-	
 	private void createOrderItems(OrderEntity entity, OrderDTO orderDTO) {
 		OrderItemConvertor conv = new OrderItemConvertor(entity);
 		for (OrderItemDTO dto : orderDTO.getItems()) {
@@ -419,7 +427,8 @@ public class ServiceImpl implements ServiceInterface {
 	public void updateProduct(ProductDTO dto) {
 
 		// LogMF.debug(LOG, "Trying to update product {0}", dto.getName()); //
-		// create* metody by m�ly m�t debug/trace logovani na za��tku (co
+		// create* metody by m�ly m�t debug/trace logovani na za��tku
+		// (co
 		// ukl�d�m) a info na konci
 
 		ProductEntity e = productRepository.findById(dto.getId());
@@ -428,7 +437,8 @@ public class ServiceImpl implements ServiceInterface {
 		productRepository.flush();
 
 		// LogMF.info(LOG, "Product updated: {0}", e.getName()); // create*
-		// metody by m�ly m�t debug/trace logovani na za��tku (co ukl�d�m) a
+		// metody by m�ly m�t debug/trace logovani na za��tku (co
+		// ukl�d�m) a
 		// info na konci
 		reloadProductsOFCategory(dto.getCategory());
 	}
@@ -438,13 +448,15 @@ public class ServiceImpl implements ServiceInterface {
 		ProductEntity e = productRepository.findById(id);
 
 		// LogMF.debug(LOG, "Trying to update product {0}", e.getName()); //
-		// create* metody by m�ly m�t debug/trace logovani na za��tku (co
+		// create* metody by m�ly m�t debug/trace logovani na za��tku
+		// (co
 		// ukl�d�m) a info na konci
 
 		productRepository.delete(id);
 
 		// LogMF.info(LOG, "Product updated: {0}", e.getName()); // create*
-		// metody by m�ly m�t debug/trace logovani na za��tku (co ukl�d�m) a
+		// metody by m�ly m�t debug/trace logovani na za��tku (co
+		// ukl�d�m) a
 		// info na konci
 	}
 
@@ -468,18 +480,14 @@ public class ServiceImpl implements ServiceInterface {
 				.getProductsByCategoryId(idCategory));
 	}
 
-	@Override
-	@Transactional(readOnly = true)
-	public CategoryDTO getCategoryById(Long id) {
-		List<CategoryDTO> list = getAllCategories();
-		for (CategoryDTO categoryDTO : list) {
-			if (categoryDTO.getId() == id) {
-				return categoryDTO;
-			}
-		}
-		return null;
-	}
-
+	/*
+	 * @Override
+	 * 
+	 * @Transactional(readOnly = true) public CategoryDTO getCategoryById(Long
+	 * id) { List<CategoryDTO> list = getAllCategories(false); for (CategoryDTO
+	 * categoryDTO : list) { if (categoryDTO.getId() == id) { return
+	 * categoryDTO; } } return null; }
+	 */
 	@Override
 	@Transactional(readOnly = true)
 	public OrderDTO getOrderById(Long id) {
@@ -487,14 +495,16 @@ public class ServiceImpl implements ServiceInterface {
 		return orderConvertor.convertToDto(entity);
 	}
 
-/*	@Override
-	@Transactional(readOnly = true)
-	public List<OrderDTO> getOrdersByEmail(String emailAddress) {
-		List<OrderEntity> orders = orderRepository
-				.findOrdersByEmail(emailAddress);
-		return orderConvertor.convertListToDto(orders);
-
-	}*/
+	/*
+	 * @Override
+	 * 
+	 * @Transactional(readOnly = true) public List<OrderDTO>
+	 * getOrdersByEmail(String emailAddress) { List<OrderEntity> orders =
+	 * orderRepository .findOrdersByEmail(emailAddress); return
+	 * orderConvertor.convertListToDto(orders);
+	 * 
+	 * }
+	 */
 
 	@Override
 	public void updateOrder(OrderDTO orderDTO) {
@@ -567,6 +577,7 @@ public class ServiceImpl implements ServiceInterface {
 		}
 		OrderItemEntity en = orderItemRepository.findById(orderItemDTO.getId());
 		en.setAmount(orderItemDTO.getAmount());
+		en.setVatValue(orderItemDTO.getVatValue());
 		orderItemRepository.save(en);
 		orderItemRepository.flush();
 	}
@@ -579,14 +590,16 @@ public class ServiceImpl implements ServiceInterface {
 					"Cannot complete order if date is null.");
 		}
 		updateOrderInternal(orderDTO);
-		
-		//--- store product amount actualisation:
+
+		// --- store product amount actualisation:
 		Collection<OrderItemDTO> itemS = orderDTO.getItems();
 		for (OrderItemDTO orderItemDTO : itemS) {
-			List<ProductRelationEntity> storeProducts = orderItemDTO.getProduct().getStoreProducts();
+			List<ProductRelationEntity> storeProducts = orderItemDTO
+					.getProduct().getStoreProducts();
 			for (ProductRelationEntity productRelationEntity : storeProducts) {
 				BigDecimal amount = productRelationEntity.getAmount();
-				amount = amount.multiply(BigDecimal.valueOf(orderItemDTO.getAmount()));
+				amount = amount.multiply(BigDecimal.valueOf(orderItemDTO
+						.getAmount()));
 				ProductEntity p = productRelationEntity.getStoreProduct();
 				p.setAmount(p.getAmount().subtract(amount));
 				updateProduct(p);
@@ -609,27 +622,29 @@ public class ServiceImpl implements ServiceInterface {
 	public List<OrderDTO> getOrderHistoryOfTable(TableDTO dto) {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.HOUR_OF_DAY, -Constants.HISTORY);
-		
-		List<OrderEntity> orders = orderRepository
-				.findOrderHistoryOfTable(dto.getId(), cal.getTime());
+
+		List<OrderEntity> orders = orderRepository.findOrderHistoryOfTable(
+				dto.getId(), cal.getTime());
 		return orderConvertor.convertListToDto(orders);
 
 	}
 
 	@Override
 	public List<UnitEntity> getAllUnits() {
-		if(units == null) {
+		if (units == null) {
 			units = unitRepository.findAll();
 		}
 		return units;
 	}
 
 	@Override
-	public List<SalesProductEntity> getSalesProductsByCategoryId(Long id, boolean onlyOffer) {
-		
-		//TODO cache !!!
-		return onlyOffer ? salesProductRepository.getProductsByCategoryOnlyOfferId(id) : salesProductRepository.getProductsByCategoryId(id);
-		
+	public List<SalesProductEntity> getSalesProductsByCategoryId(Long id,
+			boolean onlyOffer) {
+
+		// TODO cache !!!
+		return onlyOffer ? salesProductRepository
+				.getProductsByCategoryOnlyOfferId(id) : salesProductRepository
+				.getProductsByCategoryId(id);
 
 	}
 
@@ -644,7 +659,8 @@ public class ServiceImpl implements ServiceInterface {
 		salesProductRepository.save(product);
 		salesProductRepository.flush();
 		productRelationRepository.deleteRelationSalesProductId(product.getId());
-		for (ProductRelationEntity productRelationEntity : product.getStoreProducts()) {
+		for (ProductRelationEntity productRelationEntity : product
+				.getStoreProducts()) {
 			productRelationEntity.setId(null);
 			productRelationRepository.save(productRelationEntity);
 			productRelationRepository.flush();
@@ -660,12 +676,14 @@ public class ServiceImpl implements ServiceInterface {
 
 	@Override
 	public void loadStoreProducts(SalesProductEntity o) {
-		List<ProductRelationEntity> storeProducts = productRelationRepository.getStoreProducts(o.getId());
+		List<ProductRelationEntity> storeProducts = productRelationRepository
+				.getStoreProducts(o.getId());
 		o.setStoreProducts(storeProducts);
 	}
 
 	@Override
-	public void performStoreIncome(ProductDTO product, BigDecimal amount, BigDecimal price, String company) {
+	public void performStoreIncome(ProductDTO product, BigDecimal amount,
+			BigDecimal price, String company) {
 		StoreIncomeEntity storeIncomeEntity = new StoreIncomeEntity();
 		ProductEntity p = productConvertor.convertToEntity(product);
 		storeIncomeEntity.setStoreProduct(p);
@@ -673,13 +691,12 @@ public class ServiceImpl implements ServiceInterface {
 		storeIncomeEntity.setPrice(price);
 		storeIncomeEntity.setSupplierCompany(company);
 		storeIncomeRepository.saveAndFlush(storeIncomeEntity);
-		
-		//--- store product amount actualisation:
-				
+
+		// --- store product amount actualisation:
+
 		p.setAmount(p.getAmount().add(amount));
 		updateProduct(p);
-		
-		
+
 	}
 
 	@Override
@@ -689,55 +706,130 @@ public class ServiceImpl implements ServiceInterface {
 		orderDTO.setFullName(Constants.SALES_HISTORY);
 		List<OrderItemDTO> items = new ArrayList<OrderItemDTO>();
 		for (Object o : objects) {
-			if(o instanceof Object[]) {
+			if (o instanceof Object[]) {
 				Object[] objs = (Object[]) o;
 				OrderItemDTO item = new OrderItemDTO();
-				item.setProduct((SalesProductEntity)objs[0]);
-				item.setAmount(((Long)objs[1]).intValue());
-				item.setPrice((BigDecimal)objs[2]);
+				SalesProductEntity p = (SalesProductEntity) objs[0];
+				item.setProduct(p );
+				item.setAmount(((Long) objs[1]).intValue());
+				item.setPrice((BigDecimal) objs[2]);
+				item.setVatValue((BigDecimal) objs[3]);
 				items.add(item);
-			}	
-		}
-		/*Collections.sort(items, new Comparator<OrderItemDTO>() {
-
-			@Override
-			public int compare(OrderItemDTO o1, OrderItemDTO o2) {
-				
-				return o1.getPrice().compareTo(o2.getPrice());
 			}
-			
-		});*/
+		}
+		/*
+		 * Collections.sort(items, new Comparator<OrderItemDTO>() {
+		 * 
+		 * @Override public int compare(OrderItemDTO o1, OrderItemDTO o2) {
+		 * 
+		 * return o1.getPrice().compareTo(o2.getPrice()); }
+		 * 
+		 * });
+		 */
 		orderDTO.setItems(items);
 		return orderDTO;
 	}
 
 	@Override
 	public List<OrderDTO> findNotSentOrders() {
-		
-		List<OrderDTO> ords = orderConvertor.convertListToDto(orderRepository.findNotSentOrders());
-		/*for (OrderDTO orderDTO : ords) {
-			orderDTO.setTable(tableRepository.findById(orderDTO.getTableId()));
-		}*/
-		
+
+		List<OrderDTO> ords = orderConvertor.convertListToDto(orderRepository
+				.findNotSentOrders());
+		/*
+		 * for (OrderDTO orderDTO : ords) {
+		 * orderDTO.setTable(tableRepository.findById(orderDTO.getTableId())); }
+		 */
+
 		return ords;
 	}
 
 	@Override
 	public List<ProductDTO> getInsufficientProducts() {
-		return productConvertor.convertListToDto(productRepository.getInsufficientProducts());
+		return productConvertor.convertListToDto(productRepository
+				.getInsufficientProducts());
 	}
 
 	@Override
 	public List<OrderDTO> findNotStornoedOrders() {
-		List<OrderDTO> ords = orderConvertor.convertListToDto(orderRepository.findNotStornoedOrders());
+		List<OrderDTO> ords = orderConvertor.convertListToDto(orderRepository
+				.findNotStornoedOrders());
 		return ords;
 	}
 
 	@Override
-	@Transactional(readOnly=true)
+	@Transactional(readOnly = true)
 	public TableDTO getTableById(Long id) {
 		TableEntity entity = tableRepository.findById(id);
 		return tableConvertor.convertToDto(entity);
 	}
+
+	@Override
+	public void updateCategory(CategoryDTO category) {
+		CategoryEntity e = categoryRepository.findById(category.getId());
+		e = categoryConvertor.convertToEntity(category);
+		categoryRepository.save(e);
+		categoryRepository.flush();
+	}
+
+	@Override
+	public void deleteCategory(CategoryDTO cat) {
+		//categoryRepository.delete(categoryConvertor.convertToEntity(cat));
+		categoryRepository.delete(cat.getId());
+
+	}
+
+	@Override
+	public void deleteOrderItem(OrderItemDTO o) {
+		orderItemRepository.delete(o.getId());
+		
+	}
+
+	@Override
+	public void deleteOrderItems(OrderDTO orderDecreasedDTO) {
+		List<OrderItemDTO> list = orderDecreasedDTO.getDeletedItems();
+		for (OrderItemDTO orderItemDTO : list) {
+			deleteOrderItem(orderItemDTO);
+		}
+		list.clear();
+	}
+	
+	
+
+	/*	@Override
+	public void saveOrUpdateConfig(ConfigEntity e) {
+		if (StringUtils.isEmpty(e.getId()))
+			throw new IllegalArgumentException("Id is null.");
+
+
+		configRepository.saveAndFlush(e);
+
+	}
+
+	@Override
+	public ConfigEntity getConfig(String id) {
+		if (StringUtils.isEmpty(id))
+			throw new IllegalArgumentException("Id is null.");
+
+		return configRepository.findById(id);
+	}
+	@Override
+	public void loadProperties() {
+		properties = new HashMap<String, String>();
+		List<ConfigEntity> all = configRepository.findAll();
+		for (ConfigEntity configEntity : all) {
+			properties.put(configEntity.getId(), configEntity.getValue());
+		}
+	}
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		loadProperties();
+		
+	}
+
+	public String getProperty(String id) {
+		return properties.get(id);
+	}
+*/
 
 }

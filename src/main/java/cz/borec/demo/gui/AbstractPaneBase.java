@@ -34,13 +34,18 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import cz.borec.demo.AppProperties;
+import cz.borec.demo.Constants;
 import cz.borec.demo.core.dto.BaseDTO;
 import cz.borec.demo.core.dto.CategoryDTO;
 import cz.borec.demo.core.dto.OrderDTO;
 import cz.borec.demo.core.dto.OrderItemDTO;
 import cz.borec.demo.core.entity.SalesProductEntity;
+import cz.borec.demo.gui.controls.AppPropertiesProxy;
 import cz.borec.demo.gui.controls.BlueText;
+import cz.borec.demo.gui.controls.ButtonSizeUtils;
 import cz.borec.demo.gui.controls.CategoryButton;
+import cz.borec.demo.gui.controls.Colors;
 import cz.borec.demo.gui.controls.LiveButton;
 import cz.borec.demo.gui.controls.Settings;
 import cz.borec.demo.gui.controls.SubCategoryButton;
@@ -61,28 +66,54 @@ public abstract class AbstractPaneBase extends BorderPane {
 		this.controller = controller;
 		construct();
 	}
+	
+	public void resetCategories() {
+		//TODO: implement.
+ 	}
 
 	public void construct() {
 
 		HBox hbox = addHorizontalBox();
 		setTop(hbox);
-/*		ScrollPane scrollPane = new ScrollPane(); 
-		scrollPane.setContent(addVerticalBox());
-*/		setLeft(addVerticalBox());
+		
+/*		 ScrollPane scrollPane = new ScrollPane();
+		 scrollPane.setContent(addVerticalBox());
+*/		
+		 setLeft(addVerticalBox());
 		addStackPane(hbox);
 		setCenter(addGridPane());
 		// setBackground(Settings.getBackground());
 		// String image =
 		// getClass().getResource("light_texture1.jpg").toExternalForm();
-		
-		URL url = getClass().getClassLoader().getResource("images/light2.jpg");
-		String image = url.toString();
-		
-		setStyle("-fx-background-image: url('" + image + "'); "
-				+ "  -fx-background-position: center center; "
-				+ " -fx-background-repeat: stretch;");
-		
-		//setBackground(new Background(new BackgroundFill(/*Color.web("#E2E7ED")  f7f7f7*/  Color.LIGHTBLUE, new CornerRadii(5.0), Insets.EMPTY)));
+
+		int look = Integer.parseInt(AppPropertiesProxy.get(Constants.CONFIG_SKIN));
+		if (look == 2) {
+/*			setBackground(new Background(new BackgroundFill(
+					 Color.web("#222222") ,
+					new CornerRadii(5.0), Insets.EMPTY)));*/
+			
+			setStyle(" -fx-background-color: #222222, linear-gradient(to bottom right, transparent, " + 
+   " #202020 25%, #888888 50%); ");
+
+		} else if (look == 3) {
+			/*			setBackground(new Background(new BackgroundFill(
+			Color.LIGHTSKYBLUE   Color.web("#00B3C7") ,
+			new CornerRadii(5.0), Insets.EMPTY)));*/
+	setStyle(" -fx-background-color: #00b3c7, linear-gradient(to bottom right, transparent, " + 
+" #00b3c7 25%, #b1f5f6 50%); ");
+
+		} else {
+			/*URL url = getClass().getClassLoader().getResource(
+					"images/light2.jpg");
+			String image = url.toString();
+			setStyle("-fx-background-image: url('" + image + "'); "
+					+ "  -fx-background-position: center center; "
+					+ " -fx-background-repeat: stretch;");*/
+			setStyle(" -fx-background-color:  linear-gradient(to bottom right, transparent, " + 
+   " #4286f4 25%, #cfe0fc 50%); ");
+/*			setStyle(" -fx-background-color: #fe91fc, linear-gradient(to bottom right, transparent, " + 
+   " #4286f4 25%, #cfe0fc 50%); ");
+*/		}
 
 	}
 
@@ -91,7 +122,7 @@ public abstract class AbstractPaneBase extends BorderPane {
 		hbox.setPadding(new Insets(15, 12, 15, 12));
 		hbox.setSpacing(10);
 		hbox.setAlignment(Pos.CENTER_LEFT);
-		//hbox.setStyle("-fx-background-color: #336699;");
+		// hbox.setStyle("-fx-background-color: #336699;");
 
 		fillHorizontalBox(hbox);
 
@@ -109,10 +140,11 @@ public abstract class AbstractPaneBase extends BorderPane {
 	protected abstract void fillHorizontalBox(HBox hbox);
 
 	public GridPane addVerticalBox() {
-		/*VBox vbox = new VBox();
-		vbox.setPadding(new Insets(10));
-		vbox.setSpacing(18);*/
-		
+		/*
+		 * VBox vbox = new VBox(); vbox.setPadding(new Insets(10));
+		 * vbox.setSpacing(18);
+		 */
+
 		GridPane g = new GridPane();
 		g.setHgap(7);
 		g.setVgap(7);
@@ -126,7 +158,7 @@ public abstract class AbstractPaneBase extends BorderPane {
 	protected GridPane getVBox() {
 
 		return (GridPane) getLeft();
-		//return (VBox) ((ScrollPane)getLeft()).getContent();
+		// return (GridPane) ((ScrollPane)getLeft()).getContent();
 	}
 
 	protected abstract void fillVBox(GridPane g);
@@ -160,7 +192,8 @@ public abstract class AbstractPaneBase extends BorderPane {
 
 	protected Button createMenuButton() {
 		LiveButton buttonMenu = new LiveButton("Menu");
-		buttonMenu.setPrefSize(100, 20);
+		buttonMenu.setPrefWidth(100);
+		//buttonMenu.setPrefSize(100, (AppPropertiesProxy.getDisplaySize() == 2) ? 45 : 20);
 		buttonMenu.setFont(Font.font("Verdana", FontPosture.ITALIC, 14));
 		buttonMenu.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -178,26 +211,28 @@ public abstract class AbstractPaneBase extends BorderPane {
 		GridPane vbox = getVBox();
 		vbox.getChildren().clear();
 		double hhheight = getHeight();
-		double g_Height = vbox.getHeight() > 0 ? vbox.getHeight() : 300.0; //getPrefHeight();
+		double g_Height = vbox.getHeight() > 0 ? vbox.getHeight(): 300.0; // getPrefHeight();
 		double height = 0.0;
 		int ii = 0;
 		int jj = 0;
 		for (int i = 0; i < options.length; i++) {
-			//VBox.setMargin(options[i], new Insets(0, 10, 0, 6));
+			vbox.add(options[i], ii, jj++);
+			// VBox.setMargin(options[i], new Insets(0, 10, 0, 6));
 			height += options[i].getPrefHeight() + vbox.getVgap();
-			if (height > g_Height) {
+			if (height > g_Height - options[i].getPrefHeight()) {
 				height = 0.0;
 				jj = 0;
 				ii++;
-			} else {
-				vbox.add(options[i], ii, jj++);
-			}
+			} 
+			//else {
+			//}
 		}
 
 	}
 
 	protected void handleHyperlinkAction(ActionEvent arg0) {
-		CategoryDTO cat = (CategoryDTO) ((SubCategoryButton) arg0.getSource()).getUserData();
+		CategoryDTO cat = (CategoryDTO) ((SubCategoryButton) arg0.getSource())
+				.getUserData();
 		if (cat.isRoot()) {
 			SubCategoryButton[] options = subCategories.get(cat.getId());
 			selectedSubCategories = cat.getChildCategories();
@@ -210,7 +245,7 @@ public abstract class AbstractPaneBase extends BorderPane {
 			}
 			fillWithHyperlinks(options);
 		} else {
-			if(cat.getChildCategories().size() > 0) {
+			if (cat.getChildCategories().size() > 0) {
 				List<CategoryDTO> all = new ArrayList<CategoryDTO>();
 				all.addAll(categories);
 				all.addAll(selectedSubCategories);
@@ -230,11 +265,9 @@ public abstract class AbstractPaneBase extends BorderPane {
 
 	protected void refresh() {
 
-		
 	}
 
-	 SubCategoryButton[] createHyperlinks(
-			List<? extends BaseDTO<Long>> dtos) {
+	SubCategoryButton[] createHyperlinks(List<? extends BaseDTO<Long>> dtos) {
 
 		List<SubCategoryButton> links = new ArrayList<SubCategoryButton>();
 		for (BaseDTO<Long> roomDTO : dtos) {
@@ -245,14 +278,17 @@ public abstract class AbstractPaneBase extends BorderPane {
 			} else {
 				if (roomDTO instanceof CategoryDTO
 						&& ((CategoryDTO) roomDTO).isSecondLevel()) {
-					pub = new SubSubCategoryButton(StringUtils.splitIntoLines2(roomDTO.toString()));
+					pub = new SubSubCategoryButton(
+							StringUtils.splitIntoLines2(roomDTO.toString()));
 				} else {
-					pub = new SubCategoryButton(StringUtils.splitIntoLines2(roomDTO.toString()));
+					pub = new SubCategoryButton(
+							StringUtils.splitIntoLines2(roomDTO.toString()));
 				}
 			}
 			pub.setUserData(roomDTO);
-			pub.setPrefWidth(135);
-			pub.setPrefHeight(50);
+			pub.setPrefSize(ButtonSizeUtils.getRoomButtonWidth(),
+					ButtonSizeUtils.getRoomButtonHeight());// Width(135);
+
 			pub.setOnAction(new EventHandler<ActionEvent>() {
 
 				@Override
@@ -272,7 +308,7 @@ public abstract class AbstractPaneBase extends BorderPane {
 	protected LiveButton createButtonRooms() {
 		LiveButton buttonRooms = new LiveButton();
 		buttonRooms.setText("M\u00EDstnosti");
-		buttonRooms.setPrefSize(100, 20);
+		//buttonRooms.setPrefSize(100, (AppPropertiesProxy.getDisplaySize() == 2) ? 45 : 20);
 		buttonRooms.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
@@ -281,8 +317,6 @@ public abstract class AbstractPaneBase extends BorderPane {
 		});
 		return buttonRooms;
 	}
-
-
 
 	public Pane createMainPane() {
 		BorderPane pane = new BorderPane();

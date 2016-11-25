@@ -9,6 +9,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import cz.borec.demo.gui.controls.LiveButton;
+import cz.borec.demo.gui.controls.SubCategoryButton;
 
 public class AmountPane extends GridPane {
 
@@ -18,27 +19,31 @@ public class AmountPane extends GridPane {
 	//private AmountObject amountObject;
 	private TextField textField;
 
+	protected boolean DELETE;
+
 	public AmountPane() {
 		super();
 		textField = new TextField();
-		LiveButton b1 = new LiveButton("+");
-		LiveButton b2 = new LiveButton("OK");
-		LiveButton b3 = new LiveButton("-");
-		LiveButton b4 = new LiveButton("Zru\u0161it");
-		b1.setPrefWidth(100);
+		LiveButton b1 = new SubCategoryButton("+");
+		LiveButton b2 = new SubCategoryButton("OK");
+		LiveButton b3 = new SubCategoryButton("-");
+		LiveButton b4 = new SubCategoryButton("Zru\u0161it");
+		LiveButton bRemove = new SubCategoryButton("Odstranit\npolozku");
+/*		b1.setPrefWidth(100);
 		b2.setPrefWidth(100);
 		b2.setPrefHeight(100);
 		b3.setPrefWidth(100);
+*/		textField.setPrefWidth(50);
 		b3.setDefaultButton(true);
-		textField.setPrefWidth(50);
 		setPadding(new Insets(5, 5, 5, 5));
-		setHgap(20);
-		setVgap(20);
+		setHgap(5);
+		setVgap(5);
 		add(textField, 0, 0, 1, 3);
 		add(b1, 1, 0);
 		add(b2, 1, 1);
 		add(b3, 1, 2);
 		add(b4, 2, 1);
+		add(bRemove, 2, 2);
 		b1.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -52,7 +57,7 @@ public class AmountPane extends GridPane {
 			@Override
 			public void handle(ActionEvent event) {
 				//assert amountObject != null : "amountObject cannot be null.";
-				if (amount > 1) {
+				if (amount > 0) {
 					amount--;
 					//amountObject.setAmount(amount);
 				}
@@ -76,6 +81,15 @@ public class AmountPane extends GridPane {
 				getScene().getWindow().hide();
 			}
 		});
+		
+		bRemove.setOnAction(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent event) {
+				DELETE  = true;
+				getScene().getWindow().hide();
+			}
+		});
 
 		textField.textProperty().addListener(new InvalidationListener() {
 			@Override
@@ -89,6 +103,14 @@ public class AmountPane extends GridPane {
 				}
 			}
 		});
+	}
+
+	public boolean isDELETE() {
+		return DELETE;
+	}
+
+	public void setDELETE(boolean dELETE) {
+		DELETE = dELETE;
 	}
 
 	public void setAmount(Integer amount) {

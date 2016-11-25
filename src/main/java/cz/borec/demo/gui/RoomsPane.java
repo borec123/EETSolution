@@ -8,13 +8,14 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
+import javafx.scene.control.Label;
 import cz.borec.demo.core.dto.OrderDTO;
 import cz.borec.demo.core.dto.RoomDTO;
 import cz.borec.demo.core.dto.TableDTO;
@@ -88,26 +89,31 @@ public class RoomsPane extends AbstractPaneBase {
 	private double Y;
 
 	private void reloadPane(Pane pane) {
-		this.rooms = controller.getModel().getAllRooms();
-		for (RoomDTO roomDTO : rooms) {
-			if (roomDTO.getId().equals(selectedRoom.getId())) {
-				selectedRoom = roomDTO;
+		if (!editMode) {
+			this.rooms = controller.getModel().getAllRooms();
+			for (RoomDTO roomDTO : rooms) {
+				if (roomDTO.getId().equals(selectedRoom.getId())) {
+					selectedRoom = roomDTO;
+				}
 			}
 		}
 		for (TableDTO tableDTO : selectedRoom.getTables()) {
-			LiveButton button = createTableButton(tableDTO);
-			// button.setId("button1");
-
-			pane.getChildren().add(button);
-			if (tableDTO.getOrderDTO() != null) {
-				if (tableDTO.getOrderDTO().getItems().size() > 0) {
-					String preffix = tableDTO.getOrderDTO().getFullName().equals(tableDTO.getName()) ? ""
-							: tableDTO.getOrderDTO().getFullName() + ": ";
-					Text t = new Text(preffix + tableDTO.getOrderDTO().getSum().toString());
-					t.relocate(tableDTO.X, tableDTO.Y + tableDTO.height);
-					pane.getChildren().add(t);
+				LiveButton button = createTableButton(tableDTO);
+				// button.setId("button1");
+				if (tableDTO.isDeleted()) {
+					button.setVisible(false);
 				}
-			}
+
+				pane.getChildren().add(button);
+				if (tableDTO.getOrderDTO() != null) {
+					if (tableDTO.getOrderDTO().getItems().size() > 0) {
+						String preffix = tableDTO.getOrderDTO().getFullName().equals(tableDTO.getName()) ? ""
+								: tableDTO.getOrderDTO().getFullName() + ": ";
+						Label t = new Label(preffix + tableDTO.getOrderDTO().getSum().toString());
+						t.relocate(tableDTO.X, tableDTO.Y + tableDTO.height);
+						pane.getChildren().add(t);
+					}
+				}
 		}
 	}
 
@@ -135,9 +141,11 @@ public class RoomsPane extends AbstractPaneBase {
 
 				@Override
 				public void handle(javafx.scene.input.MouseEvent event) {
-					X = event.getSceneX();
-					Y = event.getSceneY();
-					System.out.println("setOnMouseDragEntered");
+					LiveButton table = (LiveButton) event.getSource();
+					TableDTO tDTO = (TableDTO) table.getUserData();
+					X = event.getSceneX() - tDTO.X;
+					Y = event.getSceneY() - tDTO.Y;
+					System.out.println(String.format("setOnMouseDragEntered X:%f, Y:%f", event.getSceneX(), event.getSceneY()));
 				}
 			});
 			button.setOnMouseDragged(new EventHandler<javafx.scene.input.MouseEvent>() {
@@ -145,7 +153,7 @@ public class RoomsPane extends AbstractPaneBase {
 				public void handle(javafx.scene.input.MouseEvent event) {
 					moveTable(event.getSource(), event.getSceneX() - X, event.getSceneY() - Y);
 
-					System.out.println("setOnMouseDragged");
+					System.out.println(String.format("setOnMouseDragged X:%f, Y:%f", event.getSceneX(), event.getSceneY()));
 				}
 			});
 			button.setOnMouseClicked(new EventHandler<javafx.scene.input.MouseEvent>() {
@@ -163,6 +171,16 @@ public class RoomsPane extends AbstractPaneBase {
 							button.setText(discountPane.getName());
 							table.setType(discountPane.getType());
 							button.setPrefSize(table.width, table.height);
+						}
+
+						else if (discountPane.isDELETE()) {
+							// selectedRoom.getTables().remove(table);
+							button.setPrefSize(0, 0);
+							Pane a = (Pane) button.getParent();
+							 a.getChildren().remove(button);
+							// a.getChildren().add(button);
+							table.setDeleted(true);
+							refresh();
 						}
 
 					}
@@ -219,10 +237,11 @@ public class RoomsPane extends AbstractPaneBase {
 		}
 	}
 
-
 	protected void createButtons(HBox hbox) {
 		final LiveButton buttonAdd = new LiveButton("Editovat");
 		final LiveButton buttonPlus = new LiveButton("P\u0159idat");
+		final LiveButton buttonBack = new LiveButton("Zru\u0161it");
+
 		buttonPlus.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -230,7 +249,7 @@ public class RoomsPane extends AbstractPaneBase {
 				TableDTO tableDTo = new TableDTO(0, 0, 70, 70);
 				tableDTo.setName("Novy stul");
 				tableDTo.setRoomDTO(selectedRoom);
-				// selectedRoom.getTables().add(tableDTo);
+				//selectedRoom.getTables().add(tableDTo);
 				// createTableButton(tableDTo );
 				refresh();
 			}
@@ -241,7 +260,8 @@ public class RoomsPane extends AbstractPaneBase {
 			public void handle(ActionEvent arg0) {
 				editMode = !editMode;
 				buttonPlus.setVisible(editMode);
-				buttonAdd.setText(editMode ? "Konec editace" : "Editovat");
+				buttonBack.setVisible(editMode);
+				buttonAdd.setText(editMode ? "Ulo\u017Eit" : "Editovat");
 				if (!editMode) {
 					BorderPane pane = (BorderPane) getCenter();
 					if (pane != null) {
@@ -265,7 +285,21 @@ public class RoomsPane extends AbstractPaneBase {
 			}
 		});
 
+		buttonBack.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				editMode = !editMode;
+				buttonPlus.setVisible(editMode);
+				buttonBack.setVisible(editMode);
+				buttonAdd.setText(editMode ? "Ulo\u017Eit" : "Editovat");
+				refresh();
+			}
+		});
+
 		hbox.getChildren().add(buttonPlus);
+		buttonBack.setVisible(false);
+		hbox.getChildren().add(buttonBack);
 		buttonPlus.setVisible(false);
 		hbox.getChildren().add(buttonAdd);
 

@@ -10,7 +10,7 @@ import cz.borec.demo.core.entity.TableEntity;
 
 public interface TableRepository extends GenericJpaRepository<TableEntity, Long> {
 
-	@Query("FROM TableEntity WHERE room.id = :idRoom")
+	@Query("FROM TableEntity WHERE deleted = false AND room.id = :idRoom")
     List<TableEntity> getTablesByRoomId(@Param("idRoom") Long idRoom);
 
 }

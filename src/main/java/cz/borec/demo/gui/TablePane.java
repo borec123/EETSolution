@@ -169,6 +169,7 @@ public class TablePane extends AbstractPaneBase {
 		BorderPane pane = new BorderPane();
 		table = new TableView<OrderItemDTO>();
 		table.setBackground(Settings.getBackground());
+		table.setPlaceholder(new javafx.scene.control.Label(""));
 		lastNameCol = new TableColumn<OrderItemDTO, String>(
 				"N\u00E1zev polo\u017Eky");
 		lastNameCol
@@ -444,6 +445,7 @@ public class TablePane extends AbstractPaneBase {
 						AlertHelper.showAmountDialog(amountPane, "Mno\u017Estv\u00ED");
 						if (amountPane.isOK()) {
 							o.setAmount(amountPane.getAmount());
+							o.calculateVat();
 							controller.getModel().saveOrderItem(o, true);
 						}
 						refresh();

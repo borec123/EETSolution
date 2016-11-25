@@ -1,0 +1,133 @@
+/* #kokot{
+-fx-background-color: 
+       #090a0c,
+        linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%),
+        linear-gradient(#20262b, #191d22),
+        radial-gradient(center 50% 0%, radius 100%, rgba(114,131,148,0.9), rgba(255,255,255,0));
+        
+    -fx-background-radius: 5,4,3,5; 
+    -fx-background-insets: 0,1,2,0;
+    -fx-text-fill: white;
+    -fx-font-family: "Arial";
+    -fx-font-style: italic;
+    -fx-text-fill: linear-gradient(white, #d0d0d0);
+    -fx-font-size: 16px;
+    -fx-padding: 10 20 10 20;
+}
+*/
+#kokot {
+    -fx-background-color:  #009EC3; 
+    -fx-background-radius: 7;
+    -fx-background-insets: 0,1,2,3,0;
+    -fx-text-fill: white;
+    -fx-font-family: "Arial";
+    -fx-font-size: 16px;
+    -fx-padding: 10 20 10 20;
+}
+
+
+#table{
+	/* -fx-background-image: url('file:///C:/Users/Hanka/Pictures/wood.jpg')"); 
+	 -fx-background-color: #993300;  */
+    -fx-background-radius: 5,4,3,5; 
+    -fx-background-insets: 0,1,2,0;
+    -fx-text-fill: black;
+    -fx-font-family: "Arial";
+    -fx-text-fill: linear-gradient(white, #d0d0d0);
+    -fx-font-size: 16px;
+    -fx-padding: 10 20 10 20;
+}
+
+#category {
+    -fx-background-color: #0167A9; //#C236D1;
+      /*  linear-gradient(#ffd65b, #e68400),
+        linear-gradient(#ffef84, #f2ba44),
+        linear-gradient(#ffea6a, #efaa22),
+        linear-gradient(#ffe657 0%, #f8c202 50%, #eea10b 100%),
+        linear-gradient(from 0% 0% to 15% 50%, rgba(255,255,255,0.9), rgba(255,255,255,0)); */
+    -fx-background-radius: 10;
+    -fx-background-insets: 0,1,2,3,0;
+    -fx-text-fill:  white; /* #654b00; */
+    -fx-font-family: "Arial";
+    -fx-font-size: 16px;
+    -fx-padding: 10 20 10 20;
+}
+
+#subCategory {
+    -fx-background-color: #8a8a8a;
+    -fx-background-radius: 10;
+    -fx-background-insets: 0,1,2,3,0;
+    -fx-text-fill: white;
+    -fx-font-family: "Arial";
+    -fx-font-size: 16px;
+    -fx-padding: 10 20 10 20;
+}
+
+#subSubCategory {
+    -fx-background-color: #768aa5;
+    -fx-background-radius: 10;
+    -fx-background-insets: 0,1,2,3,0;
+    -fx-text-fill: white;
+    -fx-font-family: "Arial";
+    -fx-font-size: 16px;
+    -fx-padding: 10 20 10 20;
+}
+
+#product {
+    -fx-background-color: #317EC8; /* #00AFF0; #FFB450; */
+    -fx-background-radius: 10;
+    -fx-background-insets: 0,1,2,3,0;
+    -fx-text-fill: white;
+    -fx-font-family: "Arial";
+    -fx-font-size: 16px;
+    -fx-padding: 10 20 10 20;
+}
+
+#iphone {
+    -fx-background-color: 
+        #a6b5c9,
+        linear-gradient(#303842 0%, #3e5577 20%, #375074 100%),
+        linear-gradient(#768aa5 0%, #849cbb 5%, #5877a2 50%, #486a9a 51%, #4a6c9b 100%);
+    -fx-background-insets: 0 0 -1 0,0,1;
+    -fx-background-radius: 5,5,4;
+    -fx-padding: 7 30 7 30;
+    -fx-text-fill: #242d35;
+    -fx-font-family: "Arial";
+    -fx-font-size: 16px;
+    -fx-text-fill: white;
+}
+
+.table-cell {
+     -fx-alignment: CENTER-RIGHT;
+    -fx-font-size: 16px;
+     /*     
+   	 -fx-font-family: "Arial";
+     The rest is from caspian.css */
+
+    -fx-skin: "com.sun.javafx.scene.control.skin.TableCellSkin";
+    -fx-padding: 0.08em; /* 0.166667em 2px, plus border adds 1px */
+
+    -fx-font-weight: bold;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent; 
+    -fx-table-cell-border-color  transparent;
+    -fx-border-width: 0.0em; /* 0.083333em  1 */
+    /*-fx-cell-size: 2.0em; /* 24 */
+    -fx-text-fill: -fx-text-inner-color;
+}
+.table-view .table-row-cell {
+  -fx-table-cell-border-color: white;
+  -fx-border-width: 0.0em;
+}
+.scroll-pane > .viewport {
+   -fx-background-color: transparent;
+}
+
+.scroll-pane {
+   -fx-background-color: transparent;
+}
+
+.table-view  {
+    -fx-background-color: transparent;
+}
+

@@ -7,10 +7,13 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.xml.bind.JAXBException;
 
+import cz.borec.demo.DPH;
 import cz.borec.demo.core.dto.OrderItemDTO;
 import cz.borec.demo.core.dto.SummarizedOrderDTO;
 import cz.borec.demo.gui.controls.AlertHelper;
@@ -38,6 +41,8 @@ import javafx.scene.layout.GridPane;
 
 public class HistoryPane extends AbstractPaneBase {
 
+	private static DateFormat formatData = new SimpleDateFormat("d.MM.yyyy H:mm");
+	
 	private static final String LABEL_STR = "P\u0159ehled tr\u017Eeb";
 	private BlueText label;
 	private SummarizedOrderDTO orderDTO;
@@ -50,6 +55,10 @@ public class HistoryPane extends AbstractPaneBase {
 */	//private FIClient fIClient;
 private Date dateFrom;
 private Date dateTo;
+
+private TableColumn<OrderItemDTO, Integer> vat;
+
+private TableColumn<OrderItemDTO, DPH> vat2;
 
 	public HistoryPane(Controller controller) throws JAXBException, InvalidKeyException, UnrecoverableKeyException, KeyStoreException, NoSuchAlgorithmException, CertificateException, FileNotFoundException, IOException {
 		super(controller);
@@ -117,6 +126,7 @@ private Date dateTo;
 		BorderPane pane = new BorderPane();
 		table = new TableView<OrderItemDTO>();
 		table.setBackground(Settings.getBackground());
+		table.setPlaceholder(new javafx.scene.control.Label(""));
 		lastNameCol = new TableColumn<OrderItemDTO, String>(
 				"N\u00E1zev polo\u017Eky");
 		lastNameCol
@@ -130,6 +140,14 @@ private Date dateTo;
 		price = new TableColumn<OrderItemDTO, Integer>("Cena (k\u010D)");
 		price.setCellValueFactory(new PropertyValueFactory("price"));
 		price.setPrefWidth(150);
+		
+		vat = new TableColumn<OrderItemDTO, Integer>("DPH (k\u010D)");
+		vat.setCellValueFactory(new PropertyValueFactory("vatValue"));
+		vat.setPrefWidth(130);
+		
+		vat2 = new TableColumn<OrderItemDTO, DPH>("DPH (%)");
+		vat2.setCellValueFactory(new PropertyValueFactory("kokot"));
+		vat2.setPrefWidth(50);
 		
 /*		col_action = new TableColumn("Akce");
         col_action.setSortable(false);
@@ -157,7 +175,7 @@ private Date dateTo;
         
 
 
-		table.getColumns().setAll(lastNameCol, amount, price/*, col_action*/);
+		table.getColumns().setAll(lastNameCol, amount, vat2, vat, price/*, col_action*/);
 		pane.setCenter(table);
 		return pane;
 	}
@@ -279,7 +297,7 @@ private Date dateTo;
 		// TODO: remove. This is workaround for bug of javafx of tableview
 		// refresh
 		table.getColumns().clear();
-		table.getColumns().addAll(lastNameCol, amount, price/*, col_action*/);
+		table.getColumns().addAll(lastNameCol, amount, vat2, vat, price/*, col_action*/);
 
 		ObservableList data = FXCollections.observableArrayList(orderDTO
 				.getItemMap().values());
@@ -346,7 +364,7 @@ private Date dateTo;
 		orderDTO.setDate(dateFrom);
 		orderDTO.setDateTo(dateTo);
 		this.orderDTO = orderDTO;
-		label.setText(LABEL_STR + " od: " + this.dateFrom.toLocaleString() + " do: " + this.dateTo.toLocaleString());
+		label.setText(LABEL_STR + " od: " + formatData.format(this.dateFrom) + " do: " + formatData.format(this.dateTo));
 	}
 
 }

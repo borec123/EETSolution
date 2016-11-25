@@ -108,4 +108,9 @@ public class SalesProductEntity extends DeletableEntity { //BaseEntity<Long> {
 		this.offer = offer;
 	}
 
+	public BigDecimal getVat() {
+		
+		return category.getVat().getValue();
+	}
+
 }

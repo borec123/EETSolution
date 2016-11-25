@@ -212,6 +212,7 @@ public abstract class ProductSearchPane extends AbstractPaneBase {
 
 		BorderPane pane = new BorderPane();
 		table = new TableView<ProductDTO>();
+		table.setPlaceholder(new javafx.scene.control.Label(""));
 		nameCol = new TableColumn<ProductDTO, String>(
 				"N\u00E1zev");
 		nameCol.setCellValueFactory(new PropertyValueFactory("name"));

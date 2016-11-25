@@ -27,6 +27,7 @@ public class OrderItemConvertor extends BaseConvertor<OrderItemDTO, OrderItemEnt
 		dto.setAmount(entity.getAmount());
 		dto.setOrder(orderDto);
 		dto.setPrice(entity.getPrice());
+		dto.setVatValue(entity.getVatValue());
 		dto.setProduct(entity.getProduct());
 		return dto;
 	}
@@ -38,6 +39,7 @@ public class OrderItemConvertor extends BaseConvertor<OrderItemDTO, OrderItemEnt
 		entity.setAmount(dto.getAmount());
 		entity.setOrder(orderEntity);
 		entity.setPrice(dto.getPrice());
+		entity.setVatValue(dto.getVatValue());
 		entity.setProduct(dto.getProduct());
 		return entity;
 	}

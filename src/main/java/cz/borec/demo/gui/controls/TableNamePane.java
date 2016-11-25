@@ -30,13 +30,19 @@ public class TableNamePane extends GridPane {
 
 	private String fullName;
 	protected TableType type;
+	protected boolean DELETE = false;
 
+
+	public boolean isDELETE() {
+		return DELETE;
+	}
 
 	public TableNamePane() {
 		super();
 		textField = new TextField();
 		LiveButton b2 = new LiveButton("OK");
 		LiveButton b4 = new LiveButton("Zru\u0161it");
+		LiveButton bRemove = new LiveButton("Odstranit");
 		b2.setPrefWidth(100);
 		b2.setPrefHeight(100);
 		textField.setPrefWidth(50);
@@ -58,6 +64,7 @@ public class TableNamePane extends GridPane {
 		add(comboBoxType, 1, 1);
 		add(b2, 2, 0, 1, 2);
 		add(b4, 3, 1);
+		add(bRemove, 3, 0);
 		b2.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -72,6 +79,15 @@ public class TableNamePane extends GridPane {
 			@Override
 			public void handle(ActionEvent event) {
 				OK = false;
+				getScene().getWindow().hide();
+			}
+		});
+		
+		bRemove.setOnAction(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent arg0) {
+				DELETE  = true;
 				getScene().getWindow().hide();
 			}
 		});
