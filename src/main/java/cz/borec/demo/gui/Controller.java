@@ -32,6 +32,8 @@ import cz.borec.demo.service.ServiceInterface;
 
 public class Controller {
 
+	private static final TableDTO TABLE_DTO = new TableDTO(100, 100, 100, 100, "Pult");
+
 	private final Scene scene;
 
 	private ServiceInterface model;
@@ -210,7 +212,7 @@ public class Controller {
 	}
 
 	public void tablePane() {
-		tablePane.refresh();
+		tablePane.setTable(TABLE_DTO);
 		scene.setRoot(tablePane);
 	}
 

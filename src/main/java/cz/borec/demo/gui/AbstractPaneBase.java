@@ -307,12 +307,12 @@ public abstract class AbstractPaneBase extends BorderPane {
 
 	protected LiveButton createButtonRooms() {
 		LiveButton buttonRooms = new LiveButton();
-		buttonRooms.setText("M\u00EDstnosti");
+		buttonRooms.setText("Objedn\u00E1vky");
 		//buttonRooms.setPrefSize(100, (AppPropertiesProxy.getDisplaySize() == 2) ? 45 : 20);
 		buttonRooms.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				controller.roomsPane();
+				controller.tablePane();
 			}
 		});
 		return buttonRooms;

@@ -67,7 +67,6 @@ public class TablePane2 extends AbstractPaneBase2 {
 	private static final String LABEL_STR = "Aktu\u00E1ln\u00ED objedn\u00E1vka";
 	protected static final long SECOND = 1000;
 	private TableDTO tableDTO;
-	private BlueText label;
 	private OrderDTO orderDTO;
 	private TableView<OrderItemDTO> table;
 	private TableColumn<OrderItemDTO, String> lastNameCol;
@@ -170,12 +169,8 @@ public class TablePane2 extends AbstractPaneBase2 {
 		hbox.getChildren().add(buttonMenu);
 		BlueText arrow = new BlueText("\u2192");
 		hbox.getChildren().add(arrow);
-		LiveButton buttonRooms = createButtonRooms();
-		hbox.getChildren().add(buttonRooms);
-		arrow = new BlueText("\u2192");
+		arrow = new BlueText("Objedn\u00E1vky");
 		hbox.getChildren().add(arrow);
-		label = new BlueText("St\u016Fl: ");
-		hbox.getChildren().add(label);
 	}
 
 	@Override
@@ -241,7 +236,6 @@ public class TablePane2 extends AbstractPaneBase2 {
 
 	public void setTable(TableDTO tableDTO) {
 		this.tableDTO = tableDTO;
-		label.setText(tableDTO.getRoomDTO().getName() + " \u2192 St\u016Fl: " + tableDTO.getName());
 
 		orderDTO = tableDTO.getOrderDTO();
 		if (orderDTO == null) {

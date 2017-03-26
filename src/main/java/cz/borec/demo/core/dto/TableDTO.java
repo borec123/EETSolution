@@ -72,13 +72,22 @@ public class TableDTO extends NamedDTO {
 		//roomDTO = null;
 	}
 
-	public TableDTO(int x, int y, int width, int height) {
+	public TableDTO(int x, int y, int width, int height, String name) {
 		super();
+		tableDTO(x, y, width, height);
+		this.setName(name);
+	}
+	
+	private void tableDTO(int x, int y, int width, int height) {
 		X = x;
 		Y = y;
 		this.width = width;
 		this.height = height;
-		//orderDTO = new OrderDTO();
+	}
+
+	public TableDTO(int x, int y, int width, int height) {
+		super();
+		tableDTO(x, y, width, height);
 	}
 
 	public void setDeleted(boolean b) {

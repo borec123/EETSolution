@@ -63,7 +63,7 @@ public class OrderEntity extends BaseEntity<Long> {
     @JoinColumn(name="table_entity", nullable=true)
     private TableEntity table;
 */
-	@Column(name="table_id", nullable=false)
+	@Column(name="table_id", nullable=true)
     private Long tableId;
 
 	@Column(name="first_call", nullable=false)
