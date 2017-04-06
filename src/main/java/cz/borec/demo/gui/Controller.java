@@ -229,7 +229,7 @@ public class Controller {
 	public void completeOrder(OrderDTO orderDTO) {
 		// TODO: encapsulate particular operations to service transaction !!!
 		orderDTO.getTableDTO().setOrderDTO(null);
-		saveTableOrder(orderDTO.getTableDTO());
+		//saveTableOrder(orderDTO.getTableDTO());
 		model.completeOrder(orderDTO);
 	}
 
@@ -241,7 +241,7 @@ public class Controller {
 		// TODO: encapsulate particular operations to service transaction !!!
 		if (orderDTO.getId() == null) {
 			model.createOrder(orderDTO);
-			saveTableOrder(orderDTO.getTableDTO());
+			//saveTableOrder(orderDTO.getTableDTO());
 		} else {
 			model.saveOrderItems(orderDTO);
 		}
