@@ -623,8 +623,8 @@ public class ServiceImpl implements ServiceInterface/*, InitializingBean*/ {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.HOUR_OF_DAY, -Constants.HISTORY);
 
-		List<OrderEntity> orders = orderRepository.findOrderHistoryOfTable(
-				dto.getId(), cal.getTime());
+		List<OrderEntity> orders = orderRepository.findOrderHistory (
+				 cal.getTime());
 		return orderConvertor.convertListToDto(orders);
 
 	}

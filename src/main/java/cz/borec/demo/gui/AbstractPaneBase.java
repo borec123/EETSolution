@@ -312,7 +312,7 @@ public abstract class AbstractPaneBase extends BorderPane {
 		buttonRooms.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				controller.tablePane();
+				controller.orderQueuePane();
 			}
 		});
 		return buttonRooms;

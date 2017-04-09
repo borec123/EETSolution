@@ -35,6 +35,7 @@ import cz.borec.demo.gui.controls.ProductButton;
 import cz.borec.demo.gui.controls.Settings;
 import cz.borec.demo.gui.controls.SubCategoryButton;
 import cz.borec.demo.gui.print.Printer;
+import cz.borec.demo.gui.utils.GridPaneFiller;
 import cz.borec.demo.util.StringUtils;
 import cz.borec.demo.ws.FIClient;
 import cz.borec.demo.ws.FIClientOpenEET;
@@ -647,10 +648,15 @@ public class TablePane2 extends AbstractPaneBase2 {
 		if (buttonList2 != null)
 			completeButtonList.addAll(buttonList2);
 
-		fillProductButtons(completeButtonList);
+		Node hovno = (Node) g.getParent().getParent().getParent();
+		double g_Width = ((ScrollPane) hovno).getWidth();
+		GridPaneFiller.fillButtons(g, completeButtonList, g_Width);
+		
+		
+		//fillProductButtons(completeButtonList);
 	}
 
-	private void fillProductButtons(List<LiveButton> buttonList) {
+/*	private void fillProductButtons(List<LiveButton> buttonList) {
 		int i = 0;
 		int j = 0;
 		// Node hovno = (Node)g.getParent().getParent().getParent().getParent();
@@ -672,7 +678,7 @@ public class TablePane2 extends AbstractPaneBase2 {
 		}
 
 	}
-
+*/
 	public class ButtonCell extends TableCell<OrderItemDTO, Boolean> {
 		final LiveButton cellButton = new LiveButton("Upravit");
 

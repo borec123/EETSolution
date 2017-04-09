@@ -50,6 +50,7 @@ public class Controller {
 	private SalesProductDetailPane salesProductDetailPane;
 	private CategoryPane categoryPane;
 	private SettingsPane settingsPane;
+	private OrderQueuePane orderQueuePane;
 
 	private OrderDTO order;
 
@@ -98,6 +99,8 @@ public class Controller {
 		partialPaymentPane = new PartialPaymentPane(this, model.getAllCategories(false));
 		categoryPane = new CategoryPane(this, model.getAllCategories(false));
 		settingsPane = new SettingsPane(this);
+		orderQueuePane = new OrderQueuePane(this);
+		
 		//appPropertiesProxy = new AppPropertiesProxy(model);
 		
 		
@@ -161,6 +164,11 @@ public class Controller {
 
 	public void mainMenu() {
 		scene.setRoot(mainPane);
+	}
+	
+	public void orderQueuePane() {
+		scene.setRoot(orderQueuePane);
+		orderQueuePane.reload();
 	}
 
 	public void roomsPane() {
