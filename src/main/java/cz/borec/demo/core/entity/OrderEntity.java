@@ -54,10 +54,23 @@ public class OrderEntity extends BaseEntity<Long> {
 	@Column(name="FIKStorno", nullable=true, length=Constants.STRING_NORMAL)
     private String FIKStorno;
 
-
-
 	@Column(name="date_c", nullable=true)
     private Date date;
+	
+/*	@Column(name="date_of_ship", nullable=true)
+    private Date dateOfShip;
+	
+	@Column(name="date_of_handover", nullable=true)
+    private Date dateOfHandOver;
+	
+	@Column(name="date_of_storno", nullable=true)
+    private Date dateOfStorno;
+*/	
+	@Column(name="state", nullable=false)
+    private OrderState state;
+	
+	
+	
 
 /*    @ManyToOne(cascade=CascadeType.ALL, targetEntity=TableEntity.class)
     @JoinColumn(name="table_entity", nullable=true)
@@ -88,8 +101,17 @@ public class OrderEntity extends BaseEntity<Long> {
 	}
 */
 
+	
 	public boolean isStorno() {
 		return storno;
+	}
+
+	public OrderState getState() {
+		return state;
+	}
+
+	public void setState(OrderState state) {
+		this.state = state;
 	}
 
 	public void setStorno(boolean storno) {

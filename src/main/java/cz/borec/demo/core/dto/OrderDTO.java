@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
 
+import javax.persistence.Column;
+
+import cz.borec.demo.core.entity.OrderState;
 import cz.borec.demo.core.entity.SalesProductEntity;
 import cz.borec.demo.util.NumberFormatter;
 
@@ -48,7 +51,17 @@ public class OrderDTO extends BaseDTO<Long> {
 
 	private List<OrderItemDTO> deletedItems;
 
-    public void setPayed(boolean payed) {
+    private OrderState state;
+	
+    public OrderState getState() {
+		return state;
+	}
+
+	public void setState(OrderState state) {
+		this.state = state;
+	}
+
+	public void setPayed(boolean payed) {
 		this.payed = payed;
 	}
 
@@ -82,6 +95,7 @@ public class OrderDTO extends BaseDTO<Long> {
     
      public OrderDTO() {
 		super();
+		setState(OrderState.PREPARING);
 	}
 
 	public BigDecimal getVatAmount() {
@@ -210,7 +224,7 @@ public class OrderDTO extends BaseDTO<Long> {
 		return this.payed;
 	}
 	
-	public String getState() {
+	public String getStateString() {
 		return (getFIK() == null ? "Neodesl\u00E1no" : "Odesl\u00E1no") + "/"
 				+ (isPayed() ? "Zaplaceno" : "Nezaplaceno") + "/" + (storno ? "Stornov\u00E1no" : "Nestornov\u00E1no");
 	}

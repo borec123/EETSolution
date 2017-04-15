@@ -32,7 +32,8 @@ import cz.borec.demo.service.ServiceInterface;
 
 public class Controller {
 
-	private static final TableDTO TABLE_DTO = new TableDTO(100, 100, 100, 100, "Pult");
+	public static final String DEFAULT_ORDER_NAME = "Pult";
+	private static final TableDTO TABLE_DTO = new TableDTO(100, 100, 100, 100, DEFAULT_ORDER_NAME);
 
 	private final Scene scene;
 
@@ -236,7 +237,7 @@ public class Controller {
 
 	public void completeOrder(OrderDTO orderDTO) {
 		// TODO: encapsulate particular operations to service transaction !!!
-		orderDTO.getTableDTO().setOrderDTO(null);
+		//orderDTO.getTableDTO().setOrderDTO(null);
 		//saveTableOrder(orderDTO.getTableDTO());
 		model.completeOrder(orderDTO);
 	}
@@ -348,11 +349,15 @@ public class Controller {
 	}
 
 	public void tablePane(OrderDTO orderDTO) {
-		TableDTO t = tablePane.getTable();
+		/*TableDTO t = tablePane.getTable();
 		
 		t.setOrderDTO(orderDTO);
 		orderDTO.setTable(t);
-		tablePane.setTable(t);
+		tablePane.setTable(t);*/
+		
+		
+		tablePane.setOrderDTO(orderDTO);
+		tablePane.refresh();
 		scene.setRoot(tablePane);
 		//tablePane();
 	}
@@ -374,5 +379,10 @@ public class Controller {
 
 	public void setError(int i) {
 		mainPane.setError(i);
+	}
+
+	public void newOrder() {
+		tablePane.newOrder();
+		scene.setRoot(tablePane);
 	}
 }

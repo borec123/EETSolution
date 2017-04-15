@@ -17,6 +17,7 @@ public class OrderConvertor extends BaseConvertor<OrderDTO, OrderEntity> {
 	@Override
 	public OrderDTO convertToDto(OrderEntity entity) {
 		OrderDTO dto = new OrderDTO();
+		dto.setState(entity.getState());
 		dto.setFullName(entity.getFullName());
 		dto.setFIK(entity.getFIK());
 		dto.setFIKStorno(entity.getFIKStorno());
@@ -53,6 +54,7 @@ public class OrderConvertor extends BaseConvertor<OrderDTO, OrderEntity> {
 	@Override
 	public OrderEntity convertToEntity(OrderDTO dto) {
 		OrderEntity entity = new OrderEntity();
+		entity.setState(dto.getState());
 		entity.setFullName(dto.getFullName());
 		entity.setFIK(dto.getFIK());
 		entity.setFIKStorno(dto.getFIKStorno());

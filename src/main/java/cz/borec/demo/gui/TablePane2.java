@@ -58,6 +58,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
 import javafx.util.Callback;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -73,7 +75,7 @@ public class TablePane2 extends AbstractPaneBase2 {
 	private TableColumn<OrderItemDTO, String> lastNameCol;
 	private TableColumn<OrderItemDTO, Integer> amount;
 	private TableColumn<OrderItemDTO, Integer> price;
-	private BlueText label_order;
+	private BlueText label_order ;
 	private TableColumn col_action;
 	private FIClientOpenEET fIClient;
 	protected DiscountPane discountPane = new DiscountPane();
@@ -170,8 +172,22 @@ public class TablePane2 extends AbstractPaneBase2 {
 		hbox.getChildren().add(buttonMenu);
 		BlueText arrow = new BlueText("\u2192");
 		hbox.getChildren().add(arrow);
-		arrow = new BlueText("Objedn\u00E1vky");
+		LiveButton buttonOrders = new LiveButton("Objedn\u00E1vky");
+		buttonOrders.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				controller.orderQueuePane();
+
+			}
+
+		});
+		hbox.getChildren().add(buttonOrders);
+		arrow = new BlueText("\u2192");
 		hbox.getChildren().add(arrow);
+		//arrow = new BlueText(this.orderDTO.getId() == null ? "Nov\u00E1 objedn\u00E1vka" : orderDTO.getId().toString());
+		label_order = new BlueText(LABEL_STR, 17);
+		hbox.getChildren().add(label_order);
 	}
 
 	@Override
@@ -197,7 +213,6 @@ public class TablePane2 extends AbstractPaneBase2 {
 		 * hbox.setSpacing(10);
 		 */
 
-		label_order = new BlueText(LABEL_STR, 17);
 
 		/*
 		 * hbox.getChildren().add(label_order);
@@ -248,6 +263,10 @@ public class TablePane2 extends AbstractPaneBase2 {
 
 		refresh();
 
+	}
+
+	public void setOrderDTO(OrderDTO orderDTO) {
+		this.orderDTO = orderDTO;
 	}
 
 	protected Node createMainContent() {
@@ -462,9 +481,9 @@ public class TablePane2 extends AbstractPaneBase2 {
 
 	protected void newOrder() {
 		orderDTO = new OrderDTO();
-		tableDTO.setOrderDTO(orderDTO);
-		orderDTO.setTable(tableDTO);
-		orderDTO.setFullName(tableDTO.getName());
+		//tableDTO.setOrderDTO(orderDTO);
+		//orderDTO.setTable(tableDTO);
+		orderDTO.setFullName(Controller.DEFAULT_ORDER_NAME);
 		refresh();
 	}
 
@@ -551,7 +570,6 @@ public class TablePane2 extends AbstractPaneBase2 {
 			}
 
 		}
-		// TODO: remove. This is workaround for bug of javafx of tableview
 		// refresh
 		refreshTable(false);
 	}
@@ -581,7 +599,7 @@ public class TablePane2 extends AbstractPaneBase2 {
 
 	private void refreshLabel() {
 		label_order
-				.setText(LABEL_STR + "\t'" + orderDTO.getFullName() + "'\t"
+				.setText(LABEL_STR + "\t'" + orderDTO.getFullName() + orderDTO.getState() + "'\t"
 						+ ((orderDTO.getSum()
 								.doubleValue() != 0)
 										? orderDTO.getSumFormatted()
