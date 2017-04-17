@@ -110,7 +110,7 @@ public class TableHistoryPane extends AbstractPaneBase {
 				+ tableDTO.getName());
 		label_order.setText(String.format("Historie objedn\u00E1vek na stole \u010D. %s za posledn\u00EDch " + Constants.HISTORY + " hodin", tableDTO.getName()));
 		
-		orderHistory = controller.getModel().getOrderHistoryOfTable(tableDTO);
+		orderHistory = controller.getModel().getOrderHistoryOfTable(tableDTO, null);
 		
 		refresh();
 

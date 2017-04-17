@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 import cz.borec.demo.core.dto.OrderDTO;
+import cz.borec.demo.core.entity.OrderState;
 import cz.borec.demo.gui.controls.AlertHelper;
 import cz.borec.demo.gui.controls.BlueText;
 import cz.borec.demo.gui.controls.LiveButton;
@@ -34,14 +35,14 @@ public class OrderQueuePane extends AbstractPaneBase {
 
 	private GridPane g;
 	private HBox topButtons;
+	private OrderState mode;
 
 	public OrderQueuePane(Controller controller) {
 		super(controller);
 	}
 
 	protected void createLeftButtons(HBox hbox) {
-		Button buttonMenu = createMenuButton();
-		hbox.getChildren().add(buttonMenu);
+		addButtons(hbox);
 	}
 	
 	protected void createButtons(HBox hbox) {
@@ -61,7 +62,11 @@ public class OrderQueuePane extends AbstractPaneBase {
 		hbox.getChildren().add(buttonMenu);
 		BlueText arrow = new BlueText("\u2192");
 		hbox.getChildren().add(arrow);*/
-		BlueText label = new BlueText("Fronta objedn\u00E1vek");
+		Button buttonMenu = createMenuButton();
+		hbox.getChildren().add(buttonMenu);
+		BlueText arrow = new BlueText("\u2192");
+		hbox.getChildren().add(arrow);
+		BlueText label = new BlueText("Objedn\u00E1vky");
 		hbox.getChildren().add(label);
 	}
 
@@ -76,7 +81,6 @@ public class OrderQueuePane extends AbstractPaneBase {
 		topButtons = new HBox();
 		topButtons.setPadding(new Insets(5, 5, 5, 5));
 		topButtons.setSpacing(5);
-		addButtons(topButtons);
 		//topButtons.getChildren().add(new javafx.scene.control.Label("kokot"));
 
 		
@@ -102,7 +106,7 @@ public class OrderQueuePane extends AbstractPaneBase {
 		buttonAll.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				controller.newOrder();
+				controller.orderQueuePane(null);
 			}
 		});
 		hbox.getChildren().add(buttonAll);
@@ -110,7 +114,7 @@ public class OrderQueuePane extends AbstractPaneBase {
 		buttonPreparing.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				controller.newOrder();
+				controller.orderQueuePane(OrderState.PREPARING);
 			}
 		});
 		hbox.getChildren().add(buttonPreparing);
@@ -118,7 +122,7 @@ public class OrderQueuePane extends AbstractPaneBase {
 		buttonShift.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				controller.newOrder();
+				controller.orderQueuePane(OrderState.SHIFT);
 			}
 		});
 		hbox.getChildren().add(buttonShift);
@@ -126,7 +130,7 @@ public class OrderQueuePane extends AbstractPaneBase {
 		buttonHandOver.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				controller.newOrder();
+				controller.orderQueuePane(OrderState.HAND_OVER);
 			}
 		});
 		hbox.getChildren().add(buttonHandOver);
@@ -134,7 +138,7 @@ public class OrderQueuePane extends AbstractPaneBase {
 		buttonStorno.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				controller.newOrder();
+				controller.orderQueuePane(OrderState.STORNO);
 			}
 		});
 		hbox.getChildren().add(buttonStorno);
@@ -156,7 +160,7 @@ public class OrderQueuePane extends AbstractPaneBase {
 	}
 
 	public void reload() {
-		List<OrderDTO> orders = controller.getModel().getOrderHistoryOfTable(null);
+		List<OrderDTO> orders = controller.getModel().getOrderHistoryOfTable(null, this.mode);
 		List<LiveButton> buttonList = new ArrayList<LiveButton>();
 		for (OrderDTO orderDTO : orders) {
 			LiveButton b = null;
@@ -198,5 +202,14 @@ public class OrderQueuePane extends AbstractPaneBase {
 			g_Width = ((ScrollPane) hovno).getWidth();
 			GridPaneFiller.fillButtons(g, buttonList, g_Width);
 		}
+	}
+
+	public void setMode(OrderState i) {
+		this.mode = i;
+		
+	}
+
+	public OrderState getMode() {
+		return mode;
 	}
 }

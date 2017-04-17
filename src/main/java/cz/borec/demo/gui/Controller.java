@@ -25,6 +25,7 @@ import cz.borec.demo.core.dto.OrderDTO;
 import cz.borec.demo.core.dto.ProductDTO;
 import cz.borec.demo.core.dto.SummarizedOrderDTO;
 import cz.borec.demo.core.dto.TableDTO;
+import cz.borec.demo.core.entity.OrderState;
 import cz.borec.demo.core.entity.SalesProductEntity;
 import cz.borec.demo.gui.controls.AppPropertiesProxy;
 import cz.borec.demo.gui.notifier.Notifier;
@@ -167,6 +168,12 @@ public class Controller {
 		scene.setRoot(mainPane);
 	}
 	
+	public void orderQueuePane(OrderState i) {
+		scene.setRoot(orderQueuePane);
+		orderQueuePane.setMode(i);
+		orderQueuePane.reload();
+	}
+
 	public void orderQueuePane() {
 		scene.setRoot(orderQueuePane);
 		orderQueuePane.reload();
@@ -226,6 +233,7 @@ public class Controller {
 	}
 
 	public void tableHistoryPane(TableDTO tableDTO) {
+		//TODO refactor remove !!!
 		tableHistoryPane.setTable(tableDTO);
 		scene.setRoot(tableHistoryPane);
 	}
@@ -262,6 +270,7 @@ public class Controller {
 	}
 
 	public void roomsPane(OrderDTO orderDTO) {
+		//TODO refacor remove !!!
 		order = orderDTO;
 		scene.setRoot(switchTableRoomsPane);
 		switchTableRoomsPane.refresh();

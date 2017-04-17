@@ -26,6 +26,7 @@ import cz.borec.demo.core.dto.TableDTO;
 import cz.borec.demo.core.entity.CategoryEntity;
 import cz.borec.demo.core.entity.OrderEntity;
 import cz.borec.demo.core.entity.OrderItemEntity;
+import cz.borec.demo.core.entity.OrderState;
 import cz.borec.demo.core.entity.ProductEntity;
 import cz.borec.demo.core.entity.ProductRelationEntity;
 import cz.borec.demo.core.entity.RoomEntity;
@@ -619,12 +620,19 @@ public class ServiceImpl implements ServiceInterface/*, InitializingBean*/ {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<OrderDTO> getOrderHistoryOfTable(TableDTO dto) {
+	public List<OrderDTO> getOrderHistoryOfTable(TableDTO dto, OrderState mode) {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.HOUR_OF_DAY, -Constants.HISTORY);
 
-		List<OrderEntity> orders = orderRepository.findOrderHistory (
+		List<OrderEntity> orders = null;
+		if(mode == null) {
+			orders = orderRepository.findOrderHistory (
 				 cal.getTime());
+		}
+		else {
+			orders = orderRepository.findOrderHistory (
+					 cal.getTime(), mode);
+		}
 		return orderConvertor.convertListToDto(orders);
 
 	}

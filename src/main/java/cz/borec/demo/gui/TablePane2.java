@@ -322,27 +322,24 @@ public class TablePane2 extends AbstractPaneBase2 {
 
 	protected void createLeftButtons(HBox hbox) {
 
-		LiveButton buttonHistory = new LiveButton("Historie");
-		LiveButton buttonMove = new LiveButton("P\u0159esunout");
+		LiveButton buttonAdd = new LiveButton("Posunout stav");
+		buttonAdd.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+			}
+		});
+		hbox.getChildren().add(buttonAdd);
+		LiveButton buttonStorno = new LiveButton("Storno");
+		buttonStorno.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+			}
+		});
+		hbox.getChildren().add(buttonStorno);
+
 		LiveButton buttonRename = new LiveButton("P\u0159ejmenovat");
 		LiveButton buttonUnPayed = new LiveButton("Nezaplacen\u00E1");
 		LiveButton buttonSplit = new LiveButton("Rozd\u011Blit");
-		buttonMove.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				controller.roomsPane(orderDTO);
-			}
-		});
-
-		buttonHistory.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				controller.tableHistoryPane(tableDTO);
-
-			}
-		});
 
 		buttonUnPayed.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -406,8 +403,6 @@ public class TablePane2 extends AbstractPaneBase2 {
 			}
 		});
 
-		hbox.getChildren().add(buttonHistory);
-		hbox.getChildren().add(buttonMove);
 		hbox.getChildren().add(buttonRename);
 		hbox.getChildren().add(buttonUnPayed);
 		hbox.getChildren().add(buttonSplit);

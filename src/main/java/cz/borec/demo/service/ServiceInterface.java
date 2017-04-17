@@ -11,6 +11,7 @@ import cz.borec.demo.core.dto.ProductDTO;
 import cz.borec.demo.core.dto.RoomDTO;
 import cz.borec.demo.core.dto.SummarizedOrderDTO;
 import cz.borec.demo.core.dto.TableDTO;
+import cz.borec.demo.core.entity.OrderState;
 import cz.borec.demo.core.entity.SalesProductEntity;
 import cz.borec.demo.core.entity.UnitEntity;
 
@@ -58,7 +59,7 @@ public interface ServiceInterface {
 
 	//public List<OrderDTO> getOrdersByEmail(String emailAddress);
 
-	public List<OrderDTO> getOrderHistoryOfTable(TableDTO dto);
+	public List<OrderDTO> getOrderHistoryOfTable(TableDTO dto, OrderState mode);
 
 	public void updateOrder(OrderDTO orderDTO);
 

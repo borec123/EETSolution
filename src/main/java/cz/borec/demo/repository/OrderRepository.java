@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import cz.borec.demo.core.entity.OrderEntity;
+import cz.borec.demo.core.entity.OrderState;
 
 
 public interface OrderRepository extends GenericJpaRepository<OrderEntity, Long> {
@@ -17,6 +18,10 @@ public interface OrderRepository extends GenericJpaRepository<OrderEntity, Long>
 	@Query("FROM OrderEntity WHERE date is not null AND date > :date ORDER BY date DESC")
 	//@Query("FROM OrderEntity WHERE table_id = :id AND date is not null AND :date = :date ORDER BY date DESC")
 	List<OrderEntity> findOrderHistory(@Param("date") Date date);
+
+	@Query("FROM OrderEntity WHERE date is not null AND date > :date AND state = :state ORDER BY date DESC")
+	//@Query("FROM OrderEntity WHERE table_id = :id AND date is not null AND :date = :date ORDER BY date DESC")
+	List<OrderEntity> findOrderHistory(@Param("date") Date date, @Param("state") OrderState state);
 
 	@Query("FROM OrderEntity WHERE FIK is null AND date is not null AND payed = true AND storno = false ORDER BY date")
 	List<OrderEntity> findNotSentOrders();
