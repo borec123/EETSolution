@@ -1,30 +1,33 @@
 package cz.borec.demo.gui;
 
-import java.math.BigDecimal;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cz.borec.demo.Constants;
+import cz.borec.demo.core.dto.BaseDTO;
+import cz.borec.demo.core.dto.CategoryDTO;
+import cz.borec.demo.gui.controls.AppPropertiesProxy;
+import cz.borec.demo.gui.controls.BlueText;
+import cz.borec.demo.gui.controls.ButtonSizeUtils;
+import cz.borec.demo.gui.controls.CategoryButton;
+import cz.borec.demo.gui.controls.LiveButton;
+import cz.borec.demo.gui.controls.SubCategoryButton;
+import cz.borec.demo.gui.controls.SubSubCategoryButton;
+import cz.borec.demo.util.StringUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
@@ -34,24 +37,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import cz.borec.demo.AppProperties;
-import cz.borec.demo.Constants;
-import cz.borec.demo.core.dto.BaseDTO;
-import cz.borec.demo.core.dto.CategoryDTO;
-import cz.borec.demo.core.dto.OrderDTO;
-import cz.borec.demo.core.dto.OrderItemDTO;
-import cz.borec.demo.core.entity.SalesProductEntity;
-import cz.borec.demo.gui.controls.AppPropertiesProxy;
-import cz.borec.demo.gui.controls.BlueText;
-import cz.borec.demo.gui.controls.ButtonSizeUtils;
-import cz.borec.demo.gui.controls.CategoryButton;
-import cz.borec.demo.gui.controls.Colors;
-import cz.borec.demo.gui.controls.LiveButton;
-import cz.borec.demo.gui.controls.Settings;
-import cz.borec.demo.gui.controls.SubCategoryButton;
-import cz.borec.demo.gui.controls.SubSubCategoryButton;
-import cz.borec.demo.util.StringUtils;
-import javafx.scene.control.ScrollPane;
 
 public abstract class AbstractPaneBase extends BorderPane {
 

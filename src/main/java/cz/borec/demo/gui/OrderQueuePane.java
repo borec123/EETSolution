@@ -10,7 +10,9 @@ import cz.borec.demo.core.dto.OrderDTO;
 import cz.borec.demo.gui.controls.AlertHelper;
 import cz.borec.demo.gui.controls.BlueText;
 import cz.borec.demo.gui.controls.LiveButton;
+import cz.borec.demo.gui.controls.ProductButton;
 import cz.borec.demo.gui.controls.SubCategoryButton;
+import cz.borec.demo.gui.controls.SubSubCategoryButton;
 import cz.borec.demo.gui.utils.GridPaneFiller;
 import cz.borec.demo.util.StringUtils;
 import javafx.event.ActionEvent;
@@ -23,6 +25,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 
 public class OrderQueuePane extends AbstractPaneBase {
 
@@ -41,14 +47,11 @@ public class OrderQueuePane extends AbstractPaneBase {
 	protected void createButtons(HBox hbox) {
 		LiveButton buttonAdd = new LiveButton("Nov\u00E1 objedn\u00E1vka");
 		buttonAdd.setOnAction(new EventHandler<ActionEvent>() {
-
 			@Override
 			public void handle(ActionEvent arg0) {
 				controller.newOrder();
 			}
-
 		});
-
 		hbox.getChildren().add(buttonAdd);
 	}	
 	
@@ -73,7 +76,8 @@ public class OrderQueuePane extends AbstractPaneBase {
 		topButtons = new HBox();
 		topButtons.setPadding(new Insets(5, 5, 5, 5));
 		topButtons.setSpacing(5);
-		topButtons.getChildren().add(new javafx.scene.control.Label("kokot"));
+		addButtons(topButtons);
+		//topButtons.getChildren().add(new javafx.scene.control.Label("kokot"));
 
 		
 		g = new GridPane();
@@ -93,6 +97,49 @@ public class OrderQueuePane extends AbstractPaneBase {
 	}
 	
 	
+	private void addButtons(HBox hbox) {
+		LiveButton buttonAll = new LiveButton("V\u0161echny");
+		buttonAll.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				controller.newOrder();
+			}
+		});
+		hbox.getChildren().add(buttonAll);
+		LiveButton buttonPreparing = new LiveButton("P\u0159ipravuj\u00ED se");
+		buttonPreparing.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				controller.newOrder();
+			}
+		});
+		hbox.getChildren().add(buttonPreparing);
+		LiveButton buttonShift = new LiveButton("Expedovan\u00E9");
+		buttonShift.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				controller.newOrder();
+			}
+		});
+		hbox.getChildren().add(buttonShift);
+		LiveButton buttonHandOver = new LiveButton("Vydan\u00E9");
+		buttonHandOver.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				controller.newOrder();
+			}
+		});
+		hbox.getChildren().add(buttonHandOver);
+		LiveButton buttonStorno = new LiveButton("Stornovan\u00E9");
+		buttonStorno.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				controller.newOrder();
+			}
+		});
+		hbox.getChildren().add(buttonStorno);
+	}
+
 	@Override
 	public Pane addGridPane() {
 
@@ -112,7 +159,25 @@ public class OrderQueuePane extends AbstractPaneBase {
 		List<OrderDTO> orders = controller.getModel().getOrderHistoryOfTable(null);
 		List<LiveButton> buttonList = new ArrayList<LiveButton>();
 		for (OrderDTO orderDTO : orders) {
-			LiveButton b = new SubCategoryButton(StringUtils.splitIntoLines("\u010D." + orderDTO.getId().toString() + '\n' + orderDTO.getDate().toLocaleString()));
+			LiveButton b = null;
+			String label = "\u010D." + orderDTO.getId().toString() + '\n' + orderDTO.getDate().toLocaleString() + '\n' + orderDTO.getSumFormattedAfterDiscount() + "k\u010D";
+			switch(orderDTO.getState()) {
+			case PREPARING:
+				b = new SubCategoryButton(StringUtils.splitIntoLines(label ));
+				break;
+			case SHIFT:
+				b = new ProductButton(StringUtils.splitIntoLines(label));
+				break;
+			case HAND_OVER:
+				b = new SubSubCategoryButton(StringUtils.splitIntoLines(label));
+				break;
+			case STORNO:
+				b = new SubCategoryButton(StringUtils.splitIntoLines(label));
+				b.setBackground(new Background(new BackgroundFill(
+			Color.LIGHTSKYBLUE   /*Color.web("#00B3C7") */,
+			new CornerRadii(5.0), Insets.EMPTY)));
+				break;
+			}
 			// b.setPrefSize(BUTTON_SIZE, BUTTON_SIZE);
 			b.setOnAction(new EventHandler<ActionEvent>() {
 
