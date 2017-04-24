@@ -509,7 +509,7 @@ public class ServiceImpl implements ServiceInterface/*, InitializingBean*/ {
 
 	@Override
 	public void updateOrder(OrderDTO orderDTO) {
-		checkOrderDate(orderDTO);
+		//checkOrderDate(orderDTO);
 		updateOrderInternal(orderDTO);
 	}
 

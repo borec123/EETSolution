@@ -31,6 +31,10 @@ public class Constants {
 
 	public static final String CONFIG_COUNT_DPH = "count.dph";
 	public static final String CONFIG_CASH_ID = "cash.id";
+	public static final String LABEL_PREPARING = "P\u0159ipravuj\u00ED se";
+	public static final String LABEL_SHIFT = "Expedovan\u00E9";
+	public static final String LABEL_HAND_OVER = "Vydan\u00E9";
+	public static final String LABEL_STORNO = "Stornovan\u00E9";
 
 
 }

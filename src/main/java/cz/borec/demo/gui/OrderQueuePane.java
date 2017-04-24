@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import cz.borec.demo.Constants;
 import cz.borec.demo.core.dto.OrderDTO;
 import cz.borec.demo.core.entity.OrderState;
 import cz.borec.demo.gui.controls.AlertHelper;
@@ -110,7 +111,7 @@ public class OrderQueuePane extends AbstractPaneBase {
 			}
 		});
 		hbox.getChildren().add(buttonAll);
-		LiveButton buttonPreparing = new LiveButton("P\u0159ipravuj\u00ED se");
+		LiveButton buttonPreparing = new LiveButton(Constants.LABEL_PREPARING);
 		buttonPreparing.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
@@ -118,7 +119,7 @@ public class OrderQueuePane extends AbstractPaneBase {
 			}
 		});
 		hbox.getChildren().add(buttonPreparing);
-		LiveButton buttonShift = new LiveButton("Expedovan\u00E9");
+		LiveButton buttonShift = new LiveButton(Constants.LABEL_SHIFT);
 		buttonShift.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
@@ -126,7 +127,7 @@ public class OrderQueuePane extends AbstractPaneBase {
 			}
 		});
 		hbox.getChildren().add(buttonShift);
-		LiveButton buttonHandOver = new LiveButton("Vydan\u00E9");
+		LiveButton buttonHandOver = new LiveButton(Constants.LABEL_HAND_OVER);
 		buttonHandOver.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
@@ -134,7 +135,7 @@ public class OrderQueuePane extends AbstractPaneBase {
 			}
 		});
 		hbox.getChildren().add(buttonHandOver);
-		LiveButton buttonStorno = new LiveButton("Stornovan\u00E9");
+		LiveButton buttonStorno = new LiveButton(Constants.LABEL_STORNO);
 		buttonStorno.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {

@@ -267,5 +267,5 @@ public class OrderDTO extends BaseDTO<Long> {
 		}
 		return deletedItems;
 	}
-	
+
 }

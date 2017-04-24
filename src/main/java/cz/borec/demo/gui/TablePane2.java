@@ -23,6 +23,7 @@ import cz.borec.demo.core.dto.OrderDTO;
 import cz.borec.demo.core.dto.OrderItemDTO;
 import cz.borec.demo.core.dto.ProductDTO;
 import cz.borec.demo.core.dto.TableDTO;
+import cz.borec.demo.core.entity.OrderState;
 import cz.borec.demo.core.entity.SalesProductEntity;
 import cz.borec.demo.gui.controls.AlertHelper;
 import cz.borec.demo.gui.controls.AppPropertiesProxy;
@@ -67,7 +68,7 @@ import javafx.scene.control.ScrollPane;
 
 public class TablePane2 extends AbstractPaneBase2 {
 
-	private static final String LABEL_STR = "Aktu\u00E1ln\u00ED objedn\u00E1vka";
+	private static final String LABEL_STR = "Objedn\u00E1vka";
 	protected static final long SECOND = 1000;
 	private TableDTO tableDTO;
 	private OrderDTO orderDTO;
@@ -326,6 +327,18 @@ public class TablePane2 extends AbstractPaneBase2 {
 		buttonAdd.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
+				if (validateCount(orderDTO)) {
+					if(orderDTO.getState() == OrderState.PREPARING) {
+						orderDTO.setState(OrderState.SHIFT);
+						//--- odepise ze skladu - decreases store:
+						controller.getModel().completeOrder(orderDTO);
+					}
+					else 
+						if(orderDTO.getState() == OrderState.SHIFT) {
+							orderDTO.setState(OrderState.HAND_OVER);
+							controller.getModel().updateOrder(orderDTO);
+						}
+				}
 			}
 		});
 		hbox.getChildren().add(buttonAdd);
@@ -333,6 +346,10 @@ public class TablePane2 extends AbstractPaneBase2 {
 		buttonStorno.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
+				if (validateCount(orderDTO)) {
+					orderDTO.setState(OrderState.STORNO);
+					controller.getModel().updateOrder(orderDTO);
+				}
 			}
 		});
 		hbox.getChildren().add(buttonStorno);
@@ -594,7 +611,8 @@ public class TablePane2 extends AbstractPaneBase2 {
 
 	private void refreshLabel() {
 		label_order
-				.setText(LABEL_STR + "\t'" + orderDTO.getFullName() + orderDTO.getState() + "'\t"
+				.setText(LABEL_STR + "\t'" + orderDTO.getFullName() + "' "
+						+ "stav: " + orderDTO.getState().toString() + "\t"
 						+ ((orderDTO.getSum()
 								.doubleValue() != 0)
 										? orderDTO.getSumFormatted()
