@@ -57,11 +57,11 @@ public class OrderEntity extends BaseEntity<Long> {
 	@Column(name="date_c", nullable=true)
     private Date date;
 	
-/*	@Column(name="date_of_ship", nullable=true)
-    private Date dateOfShip;
-	
 	@Column(name="date_of_handover", nullable=true)
     private Date dateOfHandOver;
+	
+/*	@Column(name="date_of_ship", nullable=true)
+    private Date dateOfShip;
 	
 	@Column(name="date_of_storno", nullable=true)
     private Date dateOfStorno;
@@ -72,7 +72,8 @@ public class OrderEntity extends BaseEntity<Long> {
 	
 	
 
-/*    @ManyToOne(cascade=CascadeType.ALL, targetEntity=TableEntity.class)
+
+	/*    @ManyToOne(cascade=CascadeType.ALL, targetEntity=TableEntity.class)
     @JoinColumn(name="table_entity", nullable=true)
     private TableEntity table;
 */
@@ -221,6 +222,14 @@ public class OrderEntity extends BaseEntity<Long> {
 
 	public void setFIKStorno(String fIKStorno) {
 		FIKStorno = fIKStorno;
+	}
+
+	public Date getDateOfHandOver() {
+		return dateOfHandOver;
+	}
+
+	public void setDateOfHandOver(Date dateOfHandOver) {
+		this.dateOfHandOver = dateOfHandOver;
 	}
 
 

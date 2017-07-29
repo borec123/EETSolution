@@ -24,6 +24,9 @@ public class OrderConvertor extends BaseConvertor<OrderDTO, OrderEntity> {
 		dto.setPayed(entity.isPayed());
 		dto.setFirstFICall(entity.isFirstFICall());
 		dto.setDate(entity.getDate());
+		dto.setDateOfHandOver(entity.getDateOfHandOver());
+		
+		
 		dto.setDiscount(entity.getDiscount());
 		dto.setStorno(entity.isStorno());
 		dto.setId(entity.getId());
@@ -60,6 +63,7 @@ public class OrderConvertor extends BaseConvertor<OrderDTO, OrderEntity> {
 		entity.setFIKStorno(dto.getFIKStorno());
 		entity.setPayed(dto.isPayed());
 		entity.setDate(dto.getDate());
+		entity.setDateOfHandOver(dto.getDateOfHandOver());
 		entity.setFirstFICall(dto.isFirstFICall());
 		entity.setDiscount(dto.getDiscount());
 		entity.setStorno(dto.isStorno());

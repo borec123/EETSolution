@@ -53,8 +53,18 @@ public class OrderDTO extends BaseDTO<Long> {
 
     private OrderState state;
 	
+    private Date dateOfHandOver;
+
     public OrderState getState() {
 		return state;
+	}
+
+	public Date getDateOfHandOver() {
+		return dateOfHandOver;
+	}
+
+	public void setDateOfHandOver(Date dateOfHandOver) {
+		this.dateOfHandOver = dateOfHandOver;
 	}
 
 	public void setState(OrderState state) {

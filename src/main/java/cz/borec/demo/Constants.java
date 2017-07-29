@@ -5,7 +5,7 @@ public class Constants {
 	public static final int STRING_NORMAL = 255;
 	public static final int MAX_PRICE = 1000000;
 	public static final String SALES_HISTORY = "SalesHistory";
-	public static final int HISTORY = 48;
+	public static final int HISTORY = 24;
 	public static final int TOUCH_BUTTON_WIDTH = 135;
 	public static final int TOUCH_BUTTON_HEIGHT = 50;
 	public static final int STRING_ID = 50;

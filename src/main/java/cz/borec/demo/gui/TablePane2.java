@@ -188,7 +188,8 @@ public class TablePane2 extends AbstractPaneBase2 {
 		hbox.getChildren().add(arrow);
 		//arrow = new BlueText(this.orderDTO.getId() == null ? "Nov\u00E1 objedn\u00E1vka" : orderDTO.getId().toString());
 		label_order = new BlueText(LABEL_STR, 17);
-		hbox.getChildren().add(label_order);
+		arrow = new BlueText("Detail objedn\u00E1vky", 17);
+		hbox.getChildren().add(arrow);
 	}
 
 	@Override
@@ -336,8 +337,10 @@ public class TablePane2 extends AbstractPaneBase2 {
 					else 
 						if(orderDTO.getState() == OrderState.SHIFT) {
 							orderDTO.setState(OrderState.HAND_OVER);
+							orderDTO.setDateOfHandOver(new Date());
 							controller.getModel().updateOrder(orderDTO);
 						}
+					refreshLabel();
 				}
 			}
 		});
@@ -611,7 +614,7 @@ public class TablePane2 extends AbstractPaneBase2 {
 
 	private void refreshLabel() {
 		label_order
-				.setText(LABEL_STR + "\t'" + orderDTO.getFullName() + "' "
+				.setText((orderDTO.getId() != null ? orderDTO.getId() : "") + "\t'" + orderDTO.getFullName() + "' "
 						+ "stav: " + orderDTO.getState().toString() + "\t"
 						+ ((orderDTO.getSum()
 								.doubleValue() != 0)
