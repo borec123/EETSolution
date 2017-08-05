@@ -11,6 +11,7 @@ import cz.borec.demo.core.dto.OrderDTO;
 import cz.borec.demo.core.entity.OrderState;
 import cz.borec.demo.gui.controls.AlertHelper;
 import cz.borec.demo.gui.controls.BlueText;
+import cz.borec.demo.gui.controls.CategoryButton;
 import cz.borec.demo.gui.controls.LiveButton;
 import cz.borec.demo.gui.controls.ProductButton;
 import cz.borec.demo.gui.controls.SubCategoryButton;
@@ -165,7 +166,7 @@ public class OrderQueuePane extends AbstractPaneBase {
 		List<LiveButton> buttonList = new ArrayList<LiveButton>();
 		for (OrderDTO orderDTO : orders) {
 			LiveButton b = null;
-			String label = "\u010D." + orderDTO.getId().toString() + '\n' + orderDTO.getDate().toLocaleString() + '\n' + orderDTO.getSumFormattedAfterDiscount() + "k\u010D";
+			String label = orderDTO.getId().toString() + '\n' + orderDTO.getDate().toString() + '\n' + orderDTO.getSumFormattedAfterDiscount() + "k\u010D";
 			switch(orderDTO.getState()) {
 			case PREPARING:
 				b = new SubCategoryButton(StringUtils.splitIntoLines(label ));
@@ -177,7 +178,7 @@ public class OrderQueuePane extends AbstractPaneBase {
 				b = new SubSubCategoryButton(StringUtils.splitIntoLines(label));
 				break;
 			case STORNO:
-				b = new SubCategoryButton(StringUtils.splitIntoLines(label));
+				b = new CategoryButton(StringUtils.splitIntoLines(label));
 				b.setBackground(new Background(new BackgroundFill(
 			Color.LIGHTSKYBLUE   /*Color.web("#00B3C7") */,
 			new CornerRadii(5.0), Insets.EMPTY)));

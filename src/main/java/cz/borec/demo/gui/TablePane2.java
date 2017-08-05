@@ -352,6 +352,7 @@ public class TablePane2 extends AbstractPaneBase2 {
 				if (validateCount(orderDTO)) {
 					orderDTO.setState(OrderState.STORNO);
 					controller.getModel().updateOrder(orderDTO);
+					refreshLabel();
 				}
 			}
 		});
