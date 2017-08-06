@@ -431,9 +431,14 @@ public class TablePane2 extends AbstractPaneBase2 {
 
 	private boolean validateOrder(OrderDTO orderDTO) {
 		boolean b = orderDTO.getFIK() == null;
-		System.out.println("Order FIK: " + orderDTO.getFIK());
 		if (!b) {
 			AlertHelper.showInfoDialog("Objedn\u00E1vka u\u017E byla odesl\u00E1na na finan\u010Dn\u00ED spr\u00E1vu.",
+					"\u00DA\u010Dtenku lze stornovat v sekci 'Historie'.");
+			return b;
+		}
+		b = orderDTO.getState() == OrderState.PREPARING;
+		if (!b) {
+			AlertHelper.showInfoDialog("Objedn\u00E1vka u\u017E byla expedov\u00E1na.",
 					"\u00DA\u010Dtenku lze stornovat v sekci 'Historie'.");
 		}
 		return b;

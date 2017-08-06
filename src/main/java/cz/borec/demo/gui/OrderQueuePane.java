@@ -168,7 +168,7 @@ public class OrderQueuePane extends AbstractPaneBase {
 		for (OrderDTO orderDTO : orders) {
 			LiveButton b = null;
 			SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-			String label = orderDTO.getId().toString() + '\n' + sdf.format(orderDTO.getDate()) + '\n' + orderDTO.getSumFormattedAfterDiscount() + "k\u010D";
+			String label = orderDTO.getId().toString() + '\n' + (orderDTO.getDate() == null ? "NULL" : sdf.format(orderDTO.getDate())) + '\n' + orderDTO.getSumFormattedAfterDiscount() + "k\u010D";
 			switch(orderDTO.getState()) {
 			case PREPARING:
 				b = new SubCategoryButton(StringUtils.splitIntoLines(label ));
