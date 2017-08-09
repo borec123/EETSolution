@@ -165,7 +165,7 @@ public class OrderQueuePane extends AbstractPaneBase {
 	public void reload() {
 		List<OrderDTO> orders = controller.getModel().getOrderHistoryOfTable(null, this.mode);
 		List<LiveButton> buttonList = new ArrayList<LiveButton>();
-		for (OrderDTO orderDTO : orders) {
+		for (final OrderDTO orderDTO : orders) {
 			LiveButton b = null;
 			SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 			String label = orderDTO.getId().toString() + '\n' + (orderDTO.getDate() == null ? "NULL" : sdf.format(orderDTO.getDate())) + '\n' + orderDTO.getSumFormattedAfterDiscount() + "k\u010D";
