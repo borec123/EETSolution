@@ -15,7 +15,7 @@ public interface OrderRepository extends GenericJpaRepository<OrderEntity, Long>
 /*	@Query("FROM OrderEntity WHERE email = :emailAddress")
 	List<OrderEntity> findOrdersByEmail(@Param("emailAddress") String emailAddress);
 */
-	@Query("FROM OrderEntity WHERE date > :date AND state <> 2 OR (date_of_handover > :date2 AND state = 2) ORDER BY date DESC") // 
+	@Query("FROM OrderEntity WHERE (date > :date OR date is NULL) AND state <> 2 OR (date_of_handover > :date2 AND (state = 2 OR state = 3)) ORDER BY id DESC") // 
 	//@Query("FROM OrderEntity WHERE table_id = :id AND date is not null AND :date = :date ORDER BY date DESC")
 	List<OrderEntity> findOrderHistory(@Param("date") Date date, @Param("date2") Date date2);
 

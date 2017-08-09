@@ -1,5 +1,6 @@
 package cz.borec.demo.gui;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -11,6 +12,7 @@ import cz.borec.demo.core.dto.OrderDTO;
 import cz.borec.demo.core.entity.OrderState;
 import cz.borec.demo.gui.controls.AlertHelper;
 import cz.borec.demo.gui.controls.BlueText;
+import cz.borec.demo.gui.controls.CategoryButton;
 import cz.borec.demo.gui.controls.LiveButton;
 import cz.borec.demo.gui.controls.ProductButton;
 import cz.borec.demo.gui.controls.SubCategoryButton;
@@ -165,7 +167,8 @@ public class OrderQueuePane extends AbstractPaneBase {
 		List<LiveButton> buttonList = new ArrayList<LiveButton>();
 		for (OrderDTO orderDTO : orders) {
 			LiveButton b = null;
-			String label = "\u010D." + orderDTO.getId().toString() + '\n' + orderDTO.getDate().toLocaleString() + '\n' + orderDTO.getSumFormattedAfterDiscount() + "k\u010D";
+			SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+			String label = orderDTO.getId().toString() + '\n' + (orderDTO.getDate() == null ? "NULL" : sdf.format(orderDTO.getDate())) + '\n' + orderDTO.getSumFormattedAfterDiscount() + "k\u010D";
 			switch(orderDTO.getState()) {
 			case PREPARING:
 				b = new SubCategoryButton(StringUtils.splitIntoLines(label ));
@@ -177,7 +180,7 @@ public class OrderQueuePane extends AbstractPaneBase {
 				b = new SubSubCategoryButton(StringUtils.splitIntoLines(label));
 				break;
 			case STORNO:
-				b = new SubCategoryButton(StringUtils.splitIntoLines(label));
+				b = new CategoryButton(StringUtils.splitIntoLines(label));
 				b.setBackground(new Background(new BackgroundFill(
 			Color.LIGHTSKYBLUE   /*Color.web("#00B3C7") */,
 			new CornerRadii(5.0), Insets.EMPTY)));
@@ -196,13 +199,13 @@ public class OrderQueuePane extends AbstractPaneBase {
 		
 		double g_Width = 0.0;
 		if(g.getParent() == null) {
-			g_Width = 500.0;
+			g_Width = this.getWidth() - 80;
 		}
 		else {
 			Node hovno = (Node) g.getParent().getParent().getParent();
 			g_Width = ((ScrollPane) hovno).getWidth();
-			GridPaneFiller.fillButtons(g, buttonList, g_Width);
 		}
+		GridPaneFiller.fillButtons(g, buttonList, g_Width);
 	}
 
 	public void setMode(OrderState i) {
