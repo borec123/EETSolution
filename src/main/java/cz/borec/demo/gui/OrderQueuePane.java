@@ -18,6 +18,7 @@ import cz.borec.demo.gui.controls.ProductButton;
 import cz.borec.demo.gui.controls.SubCategoryButton;
 import cz.borec.demo.gui.controls.SubSubCategoryButton;
 import cz.borec.demo.gui.utils.GridPaneFiller;
+import cz.borec.demo.sound.SoundPlayer;
 import cz.borec.demo.util.StringUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -53,6 +54,7 @@ public class OrderQueuePane extends AbstractPaneBase {
 		buttonAdd.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
+				SoundPlayer.playSound();
 				controller.newOrder();
 			}
 		});
