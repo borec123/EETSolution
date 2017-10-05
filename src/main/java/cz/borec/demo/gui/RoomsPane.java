@@ -1,4 +1,4 @@
-package cz.borec.demo.gui;
+/*package cz.borec.demo.gui;
 
 import java.util.List;
 
@@ -209,10 +209,10 @@ public class RoomsPane extends AbstractPaneBase {
 		controller.tablePane(tableDTO);
 	}
 
-	/*
+	
 	 * public void setRooms(List<RoomDTO> allRooms) { rooms = allRooms;
 	 * reloadVBox(); }
-	 */
+	 
 	private void reloadVBox() {
 
 		javafx.scene.layout.GridPane vbox = getVBox();
@@ -306,3 +306,4 @@ public class RoomsPane extends AbstractPaneBase {
 	}
 
 }
+*/

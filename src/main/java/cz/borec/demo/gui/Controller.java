@@ -43,8 +43,6 @@ public class Controller {
 	private ProductSearchPaneSalesProductsOrders productSearchPaneSalesProductsOrders;
 	private ProductSearchPaneProducts productSearchPaneProducts;
 	private ProductSearchPaneStore productSearchPaneStore;
-	private RoomsPane roomsPane;
-	private SwitchTableRoomsPane switchTableRoomsPane;
 	private MainPane mainPane;
 	private TablePane2 tablePane;
 	private TableHistoryPane tableHistoryPane;
@@ -86,9 +84,7 @@ public class Controller {
 		productSearchPaneProducts = new ProductSearchPaneProducts(this, model.getAllCategories(false));
 		productSearchPaneStore = new ProductSearchPaneStore(this, model.getAllCategories(false));
 		mainPane = new MainPane(this);
-		roomsPane = new RoomsPane(this, model.getAllRooms());
 		tablePane = new TablePane2(this, model.getAllCategories(false));
-		switchTableRoomsPane = new SwitchTableRoomsPane(this, model.getAllRooms());
 		tableHistoryPane = new TableHistoryPane(this);
 		productDetailPane = new ProductDetailPane(this, model.getAllUnits());
 		productSalesSearchPane = new ProductSearchPaneSalesProducts(this, model.getAllCategories(false));
@@ -118,7 +114,7 @@ public class Controller {
 		 * throw new RuntimeException(e); } } } }).start();
 		 */
 
-		if (Boolean.parseBoolean(AppPropertiesProxy.get(Constants.CONFIG_IS_MULTINODED))) {
+		/*if (Boolean.parseBoolean(AppPropertiesProxy.get(Constants.CONFIG_IS_MULTINODED))) {
 			javafx.concurrent.Task task = new javafx.concurrent.Task<Void>() {
 				private static final long TEN_SECONDS = 10000;
 
@@ -157,7 +153,7 @@ public class Controller {
 				}
 			};
 			new Thread(task).start();
-		}
+		}*/
 	}
 
 	public Stage getPrimaryStage() {
@@ -179,11 +175,6 @@ public class Controller {
 		orderQueuePane.reload();
 	}
 
-	public void roomsPane() {
-		// roomsPane.setRooms(model.getAllRooms());
-		scene.setRoot(roomsPane);
-		roomsPane.refresh();
-	}
 
 	public void productSearchPane(ProductSearchMode mode) {
 		switch (mode) {
@@ -269,12 +260,6 @@ public class Controller {
 
 	}
 
-	public void roomsPane(OrderDTO orderDTO) {
-		//TODO refacor remove !!!
-		order = orderDTO;
-		scene.setRoot(switchTableRoomsPane);
-		switchTableRoomsPane.refresh();
-	}
 
 	public void switchTable(TableDTO tableDTO) {
 		TableDTO t = order.getTableDTO();

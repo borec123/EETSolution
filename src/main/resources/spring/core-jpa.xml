@@ -19,8 +19,9 @@
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 
 		<property name="driverClassName" value="org.h2.Driver" />
-		<property name="url" value="jdbc:h2:./test;AUTO_SERVER=FALSE" />
-		<!-- <property name="url" value="jdbc:h2:tcp://localhost:9092/~/test" /> -->
+		<!-- <property name="url" value="jdbc:h2:./test;AUTO_SERVER=FALSE" /> -->
+		<property name="url" value="jdbc:h2:tcp://Hanka-PC:9092/c:/Users/Hanka/git/EETSolution/test" />
+		<!-- <property name="url" value="jdbc:h2:tcp://Hanka-PC:9092/~/test" /> -->
 		<property name="username" value="sa" />
 		<property name="password" value="" />
 	</bean>

@@ -1,4 +1,4 @@
-package cz.borec.demo.gui;
+/*package cz.borec.demo.gui;
 
 import java.util.List;
 
@@ -30,3 +30,4 @@ public class SwitchTableRoomsPane extends RoomsPane {
 	}
 
 }
+*/

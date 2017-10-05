@@ -103,10 +103,10 @@ public class PartialPaymentPane extends AbstractPaneBase2 {
 		hbox.getChildren().add(buttonMenu);
 		BlueText arrow = new BlueText("\u2192");
 		hbox.getChildren().add(arrow);
-		LiveButton buttonRooms = createButtonRooms();
+		/*LiveButton buttonRooms = createButtonRooms();
 		hbox.getChildren().add(buttonRooms);
 		arrow = new BlueText("\u2192");
-		hbox.getChildren().add(arrow);
+		hbox.getChildren().add(arrow);*/
 		label = new BlueText("St\u016Fl: ");
 		hbox.getChildren().add(label);
 	}
