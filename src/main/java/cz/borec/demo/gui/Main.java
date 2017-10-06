@@ -1,8 +1,17 @@
 package cz.borec.demo.gui;
 
+import java.net.BindException;
+import java.net.InetAddress;
 import java.net.URL;
+import java.net.UnknownHostException;
+import java.rmi.Naming;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.ExportException;
 import java.util.List;
 
+import org.apache.http.impl.conn.ProxySelectorRoutePlanner;
 import org.springframework.transaction.CannotCreateTransactionException;
 
 import cz.borec.demo.AppProperties;
@@ -12,6 +21,7 @@ import cz.borec.demo.gui.controls.AppPropertiesProxy;
 import cz.borec.demo.gui.controls.BlueText;
 import cz.borec.demo.gui.controls.Colors;
 import cz.borec.demo.gui.controls.LiveButton;
+import cz.borec.demo.rmi.ObserverRMIImpl;
 import cz.borec.demo.util.DatabaseConnectionTester;
 import cz.borec.demo.util.H2DatabaseStarter;
 import javafx.application.Application;
@@ -42,28 +52,21 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			
-/*			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					 final Stage dialog = new Stage();
-		             dialog.initModality(javafx.stage.Modality.APPLICATION_MODAL);
-		             dialog.initOwner(primaryStage);
-		             VBox dialogVbox = new VBox(20);
-		             dialogVbox.getChildren().add(new javafx.scene.text.Text("Hospoda startuje ..."));
-		             Scene dialogScene = new Scene(dialogVbox, 300, 200);
-		             dialog.setScene(dialogScene);
-		             dialog.show();
-		             try {
-						Thread.sleep(2000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-		             dialog.close();
-			}
-			}).start();
-*/			
-			
+
+			/*
+			 * new Thread(new Runnable() {
+			 * 
+			 * @Override public void run() { final Stage dialog = new Stage();
+			 * dialog.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+			 * dialog.initOwner(primaryStage); VBox dialogVbox = new VBox(20);
+			 * dialogVbox.getChildren().add(new
+			 * javafx.scene.text.Text("Hospoda startuje ...")); Scene
+			 * dialogScene = new Scene(dialogVbox, 300, 200);
+			 * dialog.setScene(dialogScene); dialog.show(); try {
+			 * Thread.sleep(2000); } catch (InterruptedException e) {
+			 * e.printStackTrace(); } dialog.close(); } }).start();
+			 */
+
 			btn.setText("Zku\u0161ebn\u00ED verze");
 			btn.setTextFill(Color.WHITE);
 
@@ -109,21 +112,20 @@ public class Main extends Application {
 			switch (Integer.parseInt(AppPropertiesProxy.get(Constants.CONFIG_SKIN))) {
 			case 2:
 				c = Color.web("#222222");
-				root.setStyle(" -fx-background-color:  linear-gradient(to bottom right, transparent, " + 
-						   " #202020 25%, #888888 50%); ");
+				root.setStyle(" -fx-background-color:  linear-gradient(to bottom right, transparent, "
+						+ " #202020 25%, #888888 50%); ");
 				break;
 			case 3:
-				c =  Color.web("#00B3C7");
-				root.setBackground(new Background(new BackgroundFill(c,
-						new CornerRadii(5.0), Insets.EMPTY)));
+				c = Color.web("#00B3C7");
+				root.setBackground(new Background(new BackgroundFill(c, new CornerRadii(5.0), Insets.EMPTY)));
 				break;
 
 			default:
-/*				c = Color.LIGHTBLUE;
-				root.setBackground(new Background(new BackgroundFill(c,
-						new CornerRadii(5.0), Insets.EMPTY)));
-*/				root.setStyle(" -fx-background-color:  linear-gradient(to bottom right, transparent, " + 
-		   " #4286f4 25%, #cfe0fc 50%); ");
+				/*
+				 * c = Color.LIGHTBLUE; root.setBackground(new Background(new
+				 * BackgroundFill(c, new CornerRadii(5.0), Insets.EMPTY)));
+				 */ root.setStyle(" -fx-background-color:  linear-gradient(to bottom right, transparent, "
+						+ " #4286f4 25%, #cfe0fc 50%); ");
 				break;
 			}
 
@@ -155,19 +157,18 @@ public class Main extends Application {
 			scene = new Scene(root, 1000, 500);
 			controller = new Controller(scene, primaryStage);
 
-			scene.getStylesheets()
-					.add(AppProperties.getProperties().getStyle());
+			scene.getStylesheets().add(AppProperties.getProperties().getStyle());
 
 			String mode;
+			boolean srv = Boolean.parseBoolean(AppPropertiesProxy.get(Constants.CONFIG_IS_SERVER));
 			if (!Boolean.parseBoolean(AppPropertiesProxy.get(Constants.CONFIG_IS_MULTINODED))) {
 				mode = "Standalone";
-			} else if (Boolean.parseBoolean(AppPropertiesProxy.get(Constants.CONFIG_IS_SERVER))) {
+			} else if (srv) {
 				mode = "Server";
 			} else {
 				mode = "Klient";
 			}
-			primaryStage.setTitle(CAPTION + " - zku\u0161ebn\u00ED verze"
-					+ String.format(" (m\u00F3d %s)", mode));
+			primaryStage.setTitle(CAPTION + " - zku\u0161ebn\u00ED verze" + String.format(" (m\u00F3d %s)", mode));
 			primaryStage.setScene(scene);
 
 			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
@@ -176,11 +177,14 @@ public class Main extends Application {
 				}
 			});
 
+
+				startRMI();
+
+
 			primaryStage.show();
 		} catch (CannotCreateTransactionException ex) {
 			ex.printStackTrace();
-			AlertHelper.showDialog("Chyba !",
-					"Datab\u00E1zov\u00E1 komponenta neb\u011B\u017E\u00ED !",
+			AlertHelper.showDialog("Chyba !", "Datab\u00E1zov\u00E1 komponenta neb\u011B\u017E\u00ED !",
 					AlertType.ERROR);
 		} catch (RuntimeException ex) {
 			ex.printStackTrace();
@@ -190,6 +194,31 @@ public class Main extends Application {
 			ex.printStackTrace();
 			AlertHelper.showDialog("Chyba !", ex.toString(), AlertType.ERROR);
 		}
+	}
+
+	private void startRMI() {
+
+		try {
+			try {
+				Registry registry = LocateRegistry.createRegistry(1099);
+			} catch (ExportException e) {
+
+				System.out.println("Seems RMI registry already started on this machine.");
+			}
+
+			ObserverRMIImpl server = new ObserverRMIImpl();
+			String cash_id = "cash_" + AppPropertiesProxy.get(Constants.CONFIG_CASH_ID);
+			Naming.rebind(cash_id , server);
+
+			//registry.rebind("//localhost/RMIServer", server);
+
+			System.out.println("Server ready");
+			
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+
 	}
 
 	/*
@@ -202,9 +231,11 @@ public class Main extends Application {
 	 */
 
 	public static void main(String[] args) {
-		
-/*		List<String> l = javafx.scene.text.Font.getFamilies();
-		l.forEach(k -> System.out.println(k));*/
+
+		/*
+		 * List<String> l = javafx.scene.text.Font.getFamilies(); l.forEach(k ->
+		 * System.out.println(k));
+		 */
 
 		boolean b = DatabaseConnectionTester.testConnection();
 		if (Boolean.parseBoolean(AppPropertiesProxy.get(Constants.CONFIG_IS_MULTINODED))

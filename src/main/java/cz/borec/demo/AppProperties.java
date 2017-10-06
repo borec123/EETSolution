@@ -11,6 +11,7 @@ public class AppProperties extends Properties {
 	private static AppProperties instance;
 	private Boolean superUser;
 	private Integer lookId;
+	private String[] rmiListeners = null;
 
 	protected AppProperties() {
 		super();
@@ -125,6 +126,15 @@ public class AppProperties extends Properties {
 			superUser = new Boolean(s.contains(System.getProperty("user.name")));
 		}
 		return superUser;
+	}
+
+	public String[] getRmiListeners() {
+		if (rmiListeners == null) {
+			String s = (String) get("rmi.listeners");
+			rmiListeners = s.split(",");
+		}
+
+		return rmiListeners;
 	}
 
 	public String getRestaurantName() {

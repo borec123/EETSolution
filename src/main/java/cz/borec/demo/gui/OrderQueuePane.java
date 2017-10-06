@@ -1,5 +1,9 @@
 package cz.borec.demo.gui;
 
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -7,10 +11,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import cz.borec.demo.AppProperties;
 import cz.borec.demo.Constants;
 import cz.borec.demo.core.dto.OrderDTO;
 import cz.borec.demo.core.entity.OrderState;
 import cz.borec.demo.gui.controls.AlertHelper;
+import cz.borec.demo.gui.controls.AppPropertiesProxy;
 import cz.borec.demo.gui.controls.BlueText;
 import cz.borec.demo.gui.controls.CategoryButton;
 import cz.borec.demo.gui.controls.LiveButton;
@@ -18,6 +24,9 @@ import cz.borec.demo.gui.controls.ProductButton;
 import cz.borec.demo.gui.controls.SubCategoryButton;
 import cz.borec.demo.gui.controls.SubSubCategoryButton;
 import cz.borec.demo.gui.utils.GridPaneFiller;
+import cz.borec.demo.rmi.ObserverRMIImpl;
+import cz.borec.demo.rmi.ObserverRMIInterface;
+import cz.borec.demo.rmi.RMIClient;
 import cz.borec.demo.sound.SoundPlayer;
 import cz.borec.demo.util.StringUtils;
 import javafx.event.ActionEvent;
@@ -40,9 +49,16 @@ public class OrderQueuePane extends AbstractPaneBase {
 	private GridPane g;
 	private HBox topButtons;
 	private OrderState mode;
+	private ObserverImpl observer;
 
 	public OrderQueuePane(Controller controller) {
 		super(controller);
+		try {
+			observer = new ObserverImpl();
+		} catch (RemoteException e) {
+			
+			e.printStackTrace();
+		}
 	}
 
 	protected void createLeftButtons(HBox hbox) {
@@ -54,9 +70,11 @@ public class OrderQueuePane extends AbstractPaneBase {
 		buttonAdd.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				SoundPlayer.playSound();
+				//SoundPlayer.playSound();
 				controller.newOrder();
+				RMIClient.notifyRMIListeners();
 			}
+
 		});
 		hbox.getChildren().add(buttonAdd);
 	}	
@@ -218,4 +236,22 @@ public class OrderQueuePane extends AbstractPaneBase {
 	public OrderState getMode() {
 		return mode;
 	}
+	
+	public class ObserverImpl extends ObserverRMIImpl {
+
+		protected ObserverImpl() throws RemoteException {
+			super();
+		}
+		
+		@Override
+		public void update() {
+			String cash_id = "cash_" + AppPropertiesProxy.get(Constants.CONFIG_CASH_ID);
+			System.out.println("kokot " + cash_id);
+			//SoundPlayer.playSound();
+			reload();
+		}
+	}
+	
+	
+	
 }
