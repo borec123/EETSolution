@@ -11,6 +11,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.event.ListSelectionEvent;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -620,22 +622,40 @@ public class ServiceImpl implements ServiceInterface/*, InitializingBean*/ {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<OrderDTO> getOrderHistoryOfTable(TableDTO dto, OrderState mode) {
+	public Map<OrderState, List<OrderDTO>> getOrderHistoryOfTable(OrderState mode) {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.HOUR_OF_DAY, -Constants.HISTORY);
 		Calendar cal2 = Calendar.getInstance();
 		cal2.add(Calendar.MINUTE, -2);
 
 		List<OrderEntity> orders = null;
+		Map<OrderState, List<OrderDTO>> map = new LinkedHashMap<OrderState, List<OrderDTO>>();
+		for (OrderState state : OrderState.values()) {
+			map.put(state, Collections.emptyList());
+		}
 		if(mode == null) {
 			orders = orderRepository.findOrderHistory (
 					 cal.getTime(),  cal2.getTime());
+			if(orders.size() > 0) {
+				OrderState actualMode = orders.get(0).getState();
+				int index = 0, i = 0;
+				for (OrderEntity orderEntity : orders) {
+					OrderState currentMode = orderEntity.getState();
+					if(actualMode != currentMode) {
+						map.put(actualMode, orderConvertor.convertListToDto(orders.subList(index, i)));
+						actualMode = currentMode;
+						index = i;
+					}
+					i++;
+				}
+			}
 		}
 		else {
 			orders = orderRepository.findOrderHistory (
 					 cal.getTime(), mode);
+			map.put(mode, orderConvertor.convertListToDto(orders));
 		}
-		return orderConvertor.convertListToDto(orders);
+		return map;
 
 	}
 

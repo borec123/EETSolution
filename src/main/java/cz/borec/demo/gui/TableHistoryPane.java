@@ -8,6 +8,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -110,7 +111,7 @@ public class TableHistoryPane extends AbstractPaneBase {
 				+ tableDTO.getName());
 		label_order.setText(String.format("Historie objedn\u00E1vek na stole \u010D. %s za posledn\u00EDch " + Constants.HISTORY + " hodin", tableDTO.getName()));
 		
-		orderHistory = controller.getModel().getOrderHistoryOfTable(tableDTO, null);
+		orderHistory = Collections.emptyList(); //controller.getModel().getOrderHistoryOfTable(tableDTO, null);
 		
 		refresh();
 

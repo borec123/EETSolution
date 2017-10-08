@@ -3,6 +3,7 @@ package cz.borec.demo.service;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import cz.borec.demo.core.dto.CategoryDTO;
 import cz.borec.demo.core.dto.OrderDTO;
@@ -59,7 +60,7 @@ public interface ServiceInterface {
 
 	//public List<OrderDTO> getOrdersByEmail(String emailAddress);
 
-	public List<OrderDTO> getOrderHistoryOfTable(TableDTO dto, OrderState mode);
+	public Map<OrderState, List<OrderDTO>> getOrderHistoryOfTable( OrderState mode);
 
 	public void updateOrder(OrderDTO orderDTO);
 

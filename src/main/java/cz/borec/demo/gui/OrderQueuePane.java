@@ -7,9 +7,14 @@ import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 
 import cz.borec.demo.AppProperties;
 import cz.borec.demo.Constants;
@@ -44,21 +49,18 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 
-public class OrderQueuePane extends AbstractPaneBase {
+public class OrderQueuePane extends AbstractPaneBase implements Observer {
 
 	private GridPane g;
 	private HBox topButtons;
 	private OrderState mode;
-	private ObserverImpl observer;
+	private List<OrderDTO> shiftOrdersBackup;
 
 	public OrderQueuePane(Controller controller) {
 		super(controller);
-		try {
-			observer = new ObserverImpl();
-		} catch (RemoteException e) {
-			
-			e.printStackTrace();
-		}
+		
+		ObserverRMIImpl.getInstance().addObserver(this);
+		
 	}
 
 	protected void createLeftButtons(HBox hbox) {
@@ -72,7 +74,6 @@ public class OrderQueuePane extends AbstractPaneBase {
 			public void handle(ActionEvent arg0) {
 				//SoundPlayer.playSound();
 				controller.newOrder();
-				RMIClient.notifyRMIListeners();
 			}
 
 		});
@@ -182,9 +183,12 @@ public class OrderQueuePane extends AbstractPaneBase {
 		
 	}
 
-	public void reload() {
-		List<OrderDTO> orders = controller.getModel().getOrderHistoryOfTable(null, this.mode);
-		List<LiveButton> buttonList = new ArrayList<LiveButton>();
+	public void reload(boolean playSound) {
+		Map<OrderState, List<OrderDTO>> orderMap = controller.getModel().getOrderHistoryOfTable( this.mode);
+		Map<OrderState, List<LiveButton>> buttonMap = new LinkedHashMap<OrderState, List<LiveButton>>();
+		for(OrderState key : orderMap.keySet()) {
+			List<OrderDTO> orders = orderMap.get(key);
+			List<LiveButton> buttonList = new ArrayList<LiveButton>();
 		for (final OrderDTO orderDTO : orders) {
 			LiveButton b = null;
 			SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
@@ -216,6 +220,14 @@ public class OrderQueuePane extends AbstractPaneBase {
 			});
 			buttonList.add(b);
 		}
+		if(key == OrderState.SHIFT) {
+			if(playSound && shiftOrdersBackup != null) {
+				playSound(shiftOrdersBackup, orders);
+			}
+			shiftOrdersBackup = orders;
+		}
+		buttonMap.put(key, buttonList);
+		}
 		
 		double g_Width = 0.0;
 		if(g.getParent() == null) {
@@ -225,7 +237,23 @@ public class OrderQueuePane extends AbstractPaneBase {
 			Node hovno = (Node) g.getParent().getParent().getParent();
 			g_Width = ((ScrollPane) hovno).getWidth();
 		}
-		GridPaneFiller.fillButtons(g, buttonList, g_Width);
+		GridPaneFiller.fillButtons(g, buttonMap, g_Width);
+	}
+
+
+	private void playSound(List<OrderDTO> handOverOrdersBackup2, List<OrderDTO> orders) {
+		for (OrderDTO orderDTO : orders) {
+			for (OrderDTO o2 : handOverOrdersBackup2) {
+			
+			if(!handOverOrdersBackup2.contains(orderDTO)) {
+				
+				SoundPlayer.playSound();
+				return;
+				
+			}
+			}
+		}
+		
 	}
 
 	public void setMode(OrderState i) {
@@ -236,22 +264,15 @@ public class OrderQueuePane extends AbstractPaneBase {
 	public OrderState getMode() {
 		return mode;
 	}
-	
-	public class ObserverImpl extends ObserverRMIImpl {
 
-		protected ObserverImpl() throws RemoteException {
-			super();
-		}
-		
-		@Override
-		public void update() {
-			String cash_id = "cash_" + AppPropertiesProxy.get(Constants.CONFIG_CASH_ID);
-			System.out.println("kokot " + cash_id);
-			//SoundPlayer.playSound();
-			reload();
+	@Override
+	public void update(Observable o, Object arg) {
+		System.out.println("OrderQueuePane updating ...");
+		if(controller.getScene().getRoot() == this) {
+			reload(true);
 		}
 	}
 	
-	
+ 
 	
 }

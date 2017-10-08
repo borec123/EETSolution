@@ -22,6 +22,7 @@ import cz.borec.demo.gui.controls.BlueText;
 import cz.borec.demo.gui.controls.Colors;
 import cz.borec.demo.gui.controls.LiveButton;
 import cz.borec.demo.rmi.ObserverRMIImpl;
+import cz.borec.demo.rmi.ObserverRMIInterface;
 import cz.borec.demo.util.DatabaseConnectionTester;
 import cz.borec.demo.util.H2DatabaseStarter;
 import javafx.application.Application;
@@ -206,7 +207,7 @@ public class Main extends Application {
 				System.out.println("Seems RMI registry already started on this machine.");
 			}
 
-			ObserverRMIImpl server = new ObserverRMIImpl();
+			ObserverRMIInterface server = ObserverRMIImpl.getInstance();
 			String cash_id = "cash_" + AppPropertiesProxy.get(Constants.CONFIG_CASH_ID);
 			Naming.rebind(cash_id , server);
 
@@ -244,7 +245,7 @@ public class Main extends Application {
 				try {
 					int a = H2DatabaseStarter.startDatabase();
 					System.out.print("Starting database.");
-					for (int i = 0; i < 3; i++) {
+					for (int i = 0; i < 5; i++) {
 						Thread.sleep(1000);
 						System.out.print(".");
 					}

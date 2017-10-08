@@ -13,6 +13,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.xml.bind.JAXBException;
 
@@ -37,6 +39,8 @@ import cz.borec.demo.gui.controls.Settings;
 import cz.borec.demo.gui.controls.SubCategoryButton;
 import cz.borec.demo.gui.print.Printer;
 import cz.borec.demo.gui.utils.GridPaneFiller;
+import cz.borec.demo.rmi.ObserverRMIImpl;
+import cz.borec.demo.rmi.RMIClient;
 import cz.borec.demo.util.StringUtils;
 import cz.borec.demo.ws.FIClient;
 import cz.borec.demo.ws.FIClientOpenEET;
@@ -66,7 +70,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.control.ScrollPane;
 
-public class TablePane2 extends AbstractPaneBase2 {
+public class TablePane2 extends AbstractPaneBase2 implements Observer {
 
 	private static final String LABEL_STR = "Objedn\u00E1vka";
 	protected static final long SECOND = 1000;
@@ -101,7 +105,9 @@ public class TablePane2 extends AbstractPaneBase2 {
 		orderDTO = new OrderDTO();
 		fIClient = FIClientOpenEET.getInstance();
 		fIClient.setController(controller);
-		if (!Boolean.parseBoolean(AppPropertiesProxy.get(Constants.CONFIG_IS_MULTINODED))
+		ObserverRMIImpl.getInstance().addObserver(this);
+		
+/*		if (!Boolean.parseBoolean(AppPropertiesProxy.get(Constants.CONFIG_IS_MULTINODED))
 				|| Boolean.parseBoolean(AppPropertiesProxy.get(Constants.CONFIG_IS_SERVER))) {
 			new Thread(new Runnable() {
 
@@ -164,7 +170,7 @@ public class TablePane2 extends AbstractPaneBase2 {
 
 			}).start();
 		}
-
+*/
 	}
 
 	@Override
@@ -341,6 +347,7 @@ public class TablePane2 extends AbstractPaneBase2 {
 							controller.getModel().updateOrder(orderDTO);
 						}
 					refreshLabel();
+					RMIClient.notifyRMIListeners();
 				}
 			}
 		});
@@ -469,6 +476,7 @@ public class TablePane2 extends AbstractPaneBase2 {
 
 				if (validateCount(orderDTO)) {
 					print();
+					RMIClient.notifyRMIListeners();
 				}
 			}
 		});
@@ -778,6 +786,13 @@ public class TablePane2 extends AbstractPaneBase2 {
 
 	public TableDTO getTable() {
 		return this.tableDTO;
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		if(controller.getScene().getRoot() == this) {
+			refresh();
+		}
 	}
 
 }

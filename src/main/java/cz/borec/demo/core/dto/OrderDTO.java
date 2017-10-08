@@ -33,6 +33,7 @@ public class OrderDTO extends BaseDTO<Long> {
     private String PSC;
 */
     private Date date;
+
     private TableDTO tableDTO;
 
 	private String FIK;
@@ -277,5 +278,18 @@ public class OrderDTO extends BaseDTO<Long> {
 		}
 		return deletedItems;
 	}
+
+    @Override
+	public int hashCode() {
+		return id.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(id == null || obj == null)
+			return false;
+		return id.equals(((OrderDTO)obj).getId());
+	}
+
 
 }

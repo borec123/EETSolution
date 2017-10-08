@@ -6,6 +6,8 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.naming.Context;
 
@@ -19,10 +21,16 @@ public class ObserverRMIImpl extends UnicastRemoteObject implements ObserverRMII
 	 * 
 	 */
 	private static final long serialVersionUID = 7982663773621352599L;
+	private static ObserverRMIImpl instance;
+	private MyObservable observable;
 
 	public ObserverRMIImpl() throws RemoteException {
 		super();
-		// TODO Auto-generated constructor stub
+		observable = new MyObservable();
+	}
+	
+	public void addObserver(Observer o) {
+		observable.addObserver(o);
 	}
 
 	@Override
@@ -31,9 +39,23 @@ public class ObserverRMIImpl extends UnicastRemoteObject implements ObserverRMII
 		String cash_id = "cash_" + AppPropertiesProxy.get(Constants.CONFIG_CASH_ID);
 		System.out.println("chuj " + cash_id);
 
+		observable.myNotifyObservers();
 	}
 	
-	public static void main(String[] args) {
+	public static ObserverRMIImpl getInstance() {
+		if(instance == null) {
+			try {
+				instance = new ObserverRMIImpl();
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return instance;
+		
+	}
+	
+/*	public static void main(String[] args) {
 		String codeBasePath = "file:/./target/classes";
 
 		String hostname = "Unknown";
@@ -44,12 +66,7 @@ public class ObserverRMIImpl extends UnicastRemoteObject implements ObserverRMII
 		    addr = InetAddress.getLocalHost();
 		    hostname = addr.getHostName();
 		
-/*			System.setProperty("java.rmi.server.codebase", codeBasePath);
-			System.setProperty("java.rmi.server.hostname", hostname);
-			System.setProperty("java.security.policy", "server.policy");
-			System.setProperty(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.rmi.registry.RegistryContextFactory");
-			System.setProperty(Context.PROVIDER_URL, "rmi://localhost:1099"); 
-*/
+
 			
 		    Registry registry = LocateRegistry.createRegistry(1099);
 
@@ -71,6 +88,6 @@ public class ObserverRMIImpl extends UnicastRemoteObject implements ObserverRMII
 			e.printStackTrace();
 		}
 
-	}
+	}*/
 
 }

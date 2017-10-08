@@ -8,6 +8,7 @@ import cz.borec.demo.service.ServiceInterface;
 public class AppPropertiesProxy {
 
 	private static Integer displaySize = null;
+	private static String[] rmiListeners = null;
 	ServiceInterface serviceInterface;
 
 	public AppPropertiesProxy(ServiceInterface i) {
@@ -26,6 +27,17 @@ public class AppPropertiesProxy {
 					: null;
 		}
 	}
+	
+	public static String[] getRmiListeners() {
+		if (rmiListeners == null) {
+			String s = (String) get("rmi.listeners");
+			rmiListeners = s.split(",");
+		}
+
+		return rmiListeners;
+	}
+
+
 
 	public static int getDisplaySize() {
 		if(displaySize  == null) {

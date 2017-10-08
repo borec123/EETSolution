@@ -45,7 +45,7 @@ public class Controller {
 	private ProductSearchPaneStore productSearchPaneStore;
 	private MainPane mainPane;
 	private TablePane2 tablePane;
-	private TableHistoryPane tableHistoryPane;
+	//private TableHistoryPane tableHistoryPane;
 	private ProductDetailPane productDetailPane;
 	private SalesProductDetailPane salesProductDetailPane;
 	private CategoryPane categoryPane;
@@ -85,7 +85,7 @@ public class Controller {
 		productSearchPaneStore = new ProductSearchPaneStore(this, model.getAllCategories(false));
 		mainPane = new MainPane(this);
 		tablePane = new TablePane2(this, model.getAllCategories(false));
-		tableHistoryPane = new TableHistoryPane(this);
+		//tableHistoryPane = new TableHistoryPane(this);
 		productDetailPane = new ProductDetailPane(this, model.getAllUnits());
 		productSalesSearchPane = new ProductSearchPaneSalesProducts(this, model.getAllCategories(false));
 		salesProductDetailPane = new SalesProductDetailPane(this);
@@ -156,6 +156,10 @@ public class Controller {
 		}*/
 	}
 
+	public Scene getScene() {
+		return scene;
+	}
+
 	public Stage getPrimaryStage() {
 		return primaryStage;
 	}
@@ -167,12 +171,12 @@ public class Controller {
 	public void orderQueuePane(OrderState i) {
 		scene.setRoot(orderQueuePane);
 		orderQueuePane.setMode(i);
-		orderQueuePane.reload();
+		orderQueuePane.reload(false);
 	}
 
 	public void orderQueuePane() {
 		scene.setRoot(orderQueuePane);
-		orderQueuePane.reload();
+		orderQueuePane.reload(false);
 	}
 
 
@@ -223,12 +227,12 @@ public class Controller {
 		scene.setRoot(tablePane);
 	}
 
-	public void tableHistoryPane(TableDTO tableDTO) {
+/*	public void tableHistoryPane(TableDTO tableDTO) {
 		//TODO refactor remove !!!
 		tableHistoryPane.setTable(tableDTO);
 		scene.setRoot(tableHistoryPane);
 	}
-
+*/
 	public ServiceInterface getModel() {
 		return model;
 

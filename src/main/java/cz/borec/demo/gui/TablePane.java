@@ -228,7 +228,7 @@ public class TablePane extends AbstractPaneBase {
 
 			@Override
 			public void handle(ActionEvent event) {
-				controller.tableHistoryPane(tableDTO);
+				//controller.tableHistoryPane(tableDTO);
 
 			}
 		});
