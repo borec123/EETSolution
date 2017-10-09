@@ -3,6 +3,7 @@ package cz.borec.demo.rmi;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
+import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 
 import cz.borec.demo.AppProperties;
@@ -20,23 +21,10 @@ public class RMIClient {
 	}
 	
 	public static void notifyRMIListeners() {
-		Runnable r = new Runnable() {
-			
-			@Override
-			public void run() {
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 				String[] listeners = AppProperties.getProperties().getRmiListeners();
 				for (String string : listeners) {
 					notifyListener(string);
 				}
-			}
-		};
-		new Thread(r).start();
 	}
 	
 	
