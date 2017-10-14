@@ -242,10 +242,10 @@ public abstract class AbstractPaneBase extends BorderPane {
 				SubCategoryButton[] options = createHyperlinks(all);
 				fillWithHyperlinks(options);
 			}
-			category = cat;
-			categoryText.setText(category.toString());
-			refresh();
 		}
+		category = cat;
+		categoryText.setText(category.toString());
+		refresh();
 	}
 
 	protected void refresh() {
