@@ -340,7 +340,7 @@ public class TablePane2 extends AbstractPaneBase2 implements Observer {
 		buttonAdd.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				if (validateCount(orderDTO)) {
+				if (validatePrint(orderDTO) && validateCount(orderDTO)) {
 					if (orderDTO.getState() == OrderState.PREPARING) {
 						orderDTO.setState(OrderState.SHIFT);
 						// --- odepise ze skladu - decreases store:
@@ -448,11 +448,11 @@ public class TablePane2 extends AbstractPaneBase2 implements Observer {
 					"\u00DA\u010Dtenku lze stornovat v sekci 'Historie'.");
 			return b;
 		}
-		b = orderDTO.getState() == OrderState.PREPARING;
+/*		b = orderDTO.getState() == OrderState.PREPARING;
 		if (!b) {
 			AlertHelper.showInfoDialog("Objedn\u00E1vka u\u017E byla expedov\u00E1na.",
 					"\u00DA\u010Dtenku lze stornovat v sekci 'Historie'.");
-		}
+		}*/
 		return b;
 	}
 
@@ -505,7 +505,7 @@ public class TablePane2 extends AbstractPaneBase2 implements Observer {
 	protected boolean validatePrint(OrderDTO orderDTO2) {
 		if (orderDTO.getDate() == null) {
 			AlertHelper.showInfoDialog("Objedn\u00E1vka je\u0161t\u011B nebyla vytisknuta ani odesl\u00E1na.",
-					"Vytiskn\u011Bte nebo ode\u0161lete a potom ukon\u010Dit.");
+					"Nejd\u0159\u00EDve vytiskn\u011Bte nebo ode\u0161lete.");
 			return false;
 		} else {
 
