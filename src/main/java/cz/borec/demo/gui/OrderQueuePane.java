@@ -269,7 +269,35 @@ public class OrderQueuePane extends AbstractPaneBase implements Observer {
 	public void update(Observable o, Object arg) {
 		System.out.println("OrderQueuePane updating ...");
 		if(controller.getScene().getRoot() == this) {
-			reload(true);
+			
+			
+			javafx.concurrent.Task task = new javafx.concurrent.Task<Void>() {
+				private static final long SECOND = 1000;
+
+				@Override
+				public Void call() {
+
+
+					Runnable r = new Runnable() {
+						
+						@Override
+						public void run() {
+							reload(true);
+						}
+					};
+					
+					javafx.application.Platform.runLater(r);
+					return null;
+
+			
+				}
+			};
+			Thread t = new Thread(task);
+			t.setPriority(Thread.MIN_PRIORITY);
+			 t.start();
+
+			
+			
 		}
 	}
 	

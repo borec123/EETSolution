@@ -631,7 +631,7 @@ public class ServiceImpl implements ServiceInterface/*, InitializingBean*/ {
 		List<OrderEntity> orders = null;
 		Map<OrderState, List<OrderDTO>> map = new LinkedHashMap<OrderState, List<OrderDTO>>();
 		for (OrderState state : OrderState.values()) {
-			map.put(state, Collections.emptyList());
+			map.put(state, Collections.EMPTY_LIST);
 		}
 		if(mode == null) {
 			orders = orderRepository.findOrderHistory (
@@ -648,6 +648,8 @@ public class ServiceImpl implements ServiceInterface/*, InitializingBean*/ {
 					}
 					i++;
 				}
+				map.put(actualMode, orderConvertor.convertListToDto(orders.subList(index, i)));
+
 			}
 		}
 		else {

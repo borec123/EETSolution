@@ -80,7 +80,7 @@ public class TablePane2 extends AbstractPaneBase2 implements Observer {
 	private TableColumn<OrderItemDTO, String> lastNameCol;
 	private TableColumn<OrderItemDTO, Integer> amount;
 	private TableColumn<OrderItemDTO, Integer> price;
-	private BlueText label_order ;
+	private BlueText label_order;
 	private TableColumn col_action;
 	private FIClientOpenEET fIClient;
 	protected DiscountPane discountPane = new DiscountPane();
@@ -106,71 +106,46 @@ public class TablePane2 extends AbstractPaneBase2 implements Observer {
 		fIClient = FIClientOpenEET.getInstance();
 		fIClient.setController(controller);
 		ObserverRMIImpl.getInstance().addObserver(this);
+
 		
-/*		if (!Boolean.parseBoolean(AppPropertiesProxy.get(Constants.CONFIG_IS_MULTINODED))
-				|| Boolean.parseBoolean(AppPropertiesProxy.get(Constants.CONFIG_IS_SERVER))) {
-			new Thread(new Runnable() {
-
-				private static final long HOUR = 3600000;
-
-				@Override
-				public void run() {
-					try {
-						Thread.sleep(HOUR / 120);
-					} catch (InterruptedException e1) {
-						e1.printStackTrace();
-					}
-					while (true) {
-						try {
-							sendNotSentOrders();
-						} catch (Exception e) {
-							e.printStackTrace();
-							throw new RuntimeException(e);
-						}
-						try {
-							sendNotStornoedOrders();
-							Thread.sleep(HOUR);
-						} catch (Exception e) {
-							e.printStackTrace();
-							throw new RuntimeException(e);
-						}
-					}
-				}
-
-				private void sendNotSentOrders() {
-					List<OrderDTO> orders = controller.getModel().findNotSentOrders();
-
-					for (OrderDTO orderDTO : orders) {
-						sendOrder(orderDTO, false);
-					}
-
-				}
-
-				private void sendNotStornoedOrders() {
-					List<OrderDTO> orders = controller.getModel().findNotStornoedOrders();
-
-					for (OrderDTO orderDTO : orders) {
-						sendOrder(orderDTO, true);
-					}
-
-				}
-
-				private void sendOrder(OrderDTO orderDTO, boolean storno) {
-					if ((storno ? orderDTO.getFIKStorno() : orderDTO.getFIK()) == null) {
-						try {
-							fIClient.callFIPublic(orderDTO, storno);
-							controller.updateOrderWithoutCheck(orderDTO);
-							Thread.sleep(SECOND);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-
-				}
-
-			}).start();
-		}
-*/
+		  if (!Boolean.parseBoolean(AppPropertiesProxy.get(Constants.
+		  CONFIG_IS_MULTINODED)) ||
+		  Boolean.parseBoolean(AppPropertiesProxy.get(Constants.
+		  CONFIG_IS_SERVER))) { new Thread(new Runnable() {
+		  
+		  private static final long HOUR = 3600000;
+		  
+		  @Override public void run() { try { Thread.sleep(HOUR / 120); } catch
+		  (InterruptedException e1) { e1.printStackTrace(); } while (true) {
+		  try { sendNotSentOrders(); } catch (Exception e) {
+		  e.printStackTrace(); throw new RuntimeException(e); } try {
+		  sendNotStornoedOrders(); Thread.sleep(HOUR); } catch (Exception e) {
+		  e.printStackTrace(); throw new RuntimeException(e); } } }
+		  
+		  private void sendNotSentOrders() { List<OrderDTO> orders =
+		  controller.getModel().findNotSentOrders();
+		  
+		  for (OrderDTO orderDTO : orders) { sendOrder(orderDTO, false); }
+		  
+		  }
+		  
+		  private void sendNotStornoedOrders() { List<OrderDTO> orders =
+		  controller.getModel().findNotStornoedOrders();
+		  
+		  for (OrderDTO orderDTO : orders) { sendOrder(orderDTO, true); }
+		  
+		  }
+		  
+		  private void sendOrder(OrderDTO orderDTO, boolean storno) { if
+		  ((storno ? orderDTO.getFIKStorno() : orderDTO.getFIK()) == null) {
+		  try { fIClient.callFIPublic(orderDTO, storno);
+		  controller.updateOrderWithoutCheck(orderDTO); Thread.sleep(SECOND); }
+		  catch (Exception e) { e.printStackTrace(); } }
+		  
+		  }
+		  
+		  }).start(); }
+		 
 	}
 
 	@Override
@@ -192,7 +167,8 @@ public class TablePane2 extends AbstractPaneBase2 implements Observer {
 		hbox.getChildren().add(buttonOrders);
 		arrow = new BlueText("\u2192");
 		hbox.getChildren().add(arrow);
-		//arrow = new BlueText(this.orderDTO.getId() == null ? "Nov\u00E1 objedn\u00E1vka" : orderDTO.getId().toString());
+		// arrow = new BlueText(this.orderDTO.getId() == null ? "Nov\u00E1
+		// objedn\u00E1vka" : orderDTO.getId().toString());
 		label_order = new BlueText(LABEL_STR, 17);
 		arrow = new BlueText("Detail objedn\u00E1vky", 17);
 		hbox.getChildren().add(arrow);
@@ -220,7 +196,6 @@ public class TablePane2 extends AbstractPaneBase2 implements Observer {
 		 * HBox hbox = new HBox(); hbox.setPadding(new Insets(8, 10, 5, 0));
 		 * hbox.setSpacing(10);
 		 */
-
 
 		/*
 		 * hbox.getChildren().add(label_order);
@@ -288,7 +263,7 @@ public class TablePane2 extends AbstractPaneBase2 implements Observer {
 		table = new TableView<OrderItemDTO>();
 		table.setBackground(Settings.getBackground());
 		table.setPlaceholder(new javafx.scene.control.Label(""));
-		
+
 		lastNameCol = new TableColumn<OrderItemDTO, String>("N\u00E1zev polo\u017Eky");
 		lastNameCol.setCellValueFactory(new PropertyValueFactory("productName"));
 		lastNameCol.setPrefWidth(160);
@@ -328,6 +303,37 @@ public class TablePane2 extends AbstractPaneBase2 implements Observer {
 		return pane;
 	}
 
+	private void notifyRMIListeners() {
+		RMIClient.notifyRMIListeners();
+		
+/*		javafx.concurrent.Task task = new javafx.concurrent.Task<Void>() {
+			private static final long SECOND = 1000;
+
+			@Override
+			public Void call() {
+
+
+				Runnable r = new Runnable() {
+					
+					@Override
+					public void run() {
+						RMIClient.notifyRMIListeners();
+					}
+				};
+				
+				javafx.application.Platform.runLater(r);
+				return null;
+
+		
+			}
+		};
+		Thread t = new Thread(task);
+		t.setPriority(Thread.MIN_PRIORITY);
+		 t.start();
+*/	
+		
+	}
+
 	protected void createLeftButtons(HBox hbox) {
 
 		LiveButton buttonAdd = new LiveButton("Posunout stav");
@@ -335,21 +341,20 @@ public class TablePane2 extends AbstractPaneBase2 implements Observer {
 			@Override
 			public void handle(ActionEvent arg0) {
 				if (validateCount(orderDTO)) {
-					if(orderDTO.getState() == OrderState.PREPARING) {
+					if (orderDTO.getState() == OrderState.PREPARING) {
 						orderDTO.setState(OrderState.SHIFT);
-						//--- odepise ze skladu - decreases store:
+						// --- odepise ze skladu - decreases store:
 						controller.getModel().completeOrder(orderDTO);
+					} else if (orderDTO.getState() == OrderState.SHIFT) {
+						orderDTO.setState(OrderState.HAND_OVER);
+						orderDTO.setDateOfHandOver(new Date());
+						controller.getModel().updateOrder(orderDTO);
 					}
-					else 
-						if(orderDTO.getState() == OrderState.SHIFT) {
-							orderDTO.setState(OrderState.HAND_OVER);
-							orderDTO.setDateOfHandOver(new Date());
-							controller.getModel().updateOrder(orderDTO);
-						}
 					refreshLabel();
-					RMIClient.notifyRMIListeners();
+					notifyRMIListeners();
 				}
 			}
+
 		});
 		hbox.getChildren().add(buttonAdd);
 		LiveButton buttonStorno = new LiveButton("Storno");
@@ -510,8 +515,8 @@ public class TablePane2 extends AbstractPaneBase2 implements Observer {
 
 	protected void newOrder() {
 		orderDTO = new OrderDTO();
-		//tableDTO.setOrderDTO(orderDTO);
-		//orderDTO.setTable(tableDTO);
+		// tableDTO.setOrderDTO(orderDTO);
+		// orderDTO.setTable(tableDTO);
 		orderDTO.setFullName(Controller.DEFAULT_ORDER_NAME);
 		refresh();
 	}
@@ -627,16 +632,12 @@ public class TablePane2 extends AbstractPaneBase2 implements Observer {
 	}
 
 	private void refreshLabel() {
-		label_order
-				.setText((orderDTO.getId() != null ? orderDTO.getId() : "") + "\t'" + orderDTO.getFullName() + "' "
-						+ "stav: " + orderDTO.getState().toString() + "\t"
-						+ ((orderDTO.getSum()
-								.doubleValue() != 0)
-										? orderDTO.getSumFormatted()
-												+ (orderDTO.getDiscount() != null && orderDTO.getDiscount()
-														.doubleValue() > BigDecimal.ZERO.doubleValue()
-																? " (-" + orderDTO.getDiscount() + ")" : "")
-								+ " k\u010D" : ""));
+		label_order.setText((orderDTO.getId() != null ? orderDTO.getId() : "") + "\t'" + orderDTO.getFullName() + "' "
+				+ "stav: " + orderDTO.getState().toString() + "\t"
+				+ ((orderDTO.getSum().doubleValue() != 0) ? orderDTO.getSumFormatted() + (orderDTO.getDiscount() != null
+						&& orderDTO.getDiscount().doubleValue() > BigDecimal.ZERO.doubleValue()
+								? " (-" + orderDTO.getDiscount() + ")" : "")
+						+ " k\u010D" : ""));
 	}
 
 	protected void reloadSubCategories(CategoryDTO categoryDTO) {
@@ -699,34 +700,24 @@ public class TablePane2 extends AbstractPaneBase2 implements Observer {
 		Node hovno = (Node) g.getParent().getParent().getParent();
 		double g_Width = ((ScrollPane) hovno).getWidth();
 		GridPaneFiller.fillButtons(g, completeButtonList, g_Width);
-		
-		
-		//fillProductButtons(completeButtonList);
+
+		// fillProductButtons(completeButtonList);
 	}
 
-/*	private void fillProductButtons(List<LiveButton> buttonList) {
-		int i = 0;
-		int j = 0;
-		// Node hovno = (Node)g.getParent().getParent().getParent().getParent();
-		Node hovno = (Node) g.getParent().getParent().getParent();
-		double g_Width = ((ScrollPane) hovno).getWidth();
-		double width = 0.0;
-		g.getChildren().clear();
-		for (LiveButton liveButton : buttonList) {
-			g.add(liveButton, i++, j);
-			double BUTTON_SIZE = ButtonSizeUtils.getTouchButtonSize();
-			width += BUTTON_SIZE + g.getHgap();
-			if (width > g_Width - BUTTON_SIZE) {
-				width = 0.0;
-				i = 0;
-				j++;
-			}
-			// else {
-			// }
-		}
-
-	}
-*/
+	/*
+	 * private void fillProductButtons(List<LiveButton> buttonList) { int i = 0;
+	 * int j = 0; // Node hovno =
+	 * (Node)g.getParent().getParent().getParent().getParent(); Node hovno =
+	 * (Node) g.getParent().getParent().getParent(); double g_Width =
+	 * ((ScrollPane) hovno).getWidth(); double width = 0.0;
+	 * g.getChildren().clear(); for (LiveButton liveButton : buttonList) {
+	 * g.add(liveButton, i++, j); double BUTTON_SIZE =
+	 * ButtonSizeUtils.getTouchButtonSize(); width += BUTTON_SIZE + g.getHgap();
+	 * if (width > g_Width - BUTTON_SIZE) { width = 0.0; i = 0; j++; } // else {
+	 * // } }
+	 * 
+	 * }
+	 */
 	public class ButtonCell extends TableCell<OrderItemDTO, Boolean> {
 		final LiveButton cellButton = new LiveButton("Upravit");
 
@@ -749,7 +740,8 @@ public class TablePane2 extends AbstractPaneBase2 implements Observer {
 							o.calculateVat();
 							controller.getModel().saveOrderItem(o, true);
 						} else if (amountPane.isDELETE()) {
-							if (o.getAmount() == 0 || AlertHelper.showConfirmDialog("Opravdu smazat polozku ze seznamu ?", "")) {
+							if (o.getAmount() == 0
+									|| AlertHelper.showConfirmDialog("Opravdu smazat polozku ze seznamu ?", "")) {
 								OrderDTO order = o.getOrder();
 								order.getItems().remove(o);
 								controller.getModel().deleteOrderItem(o);
@@ -782,6 +774,7 @@ public class TablePane2 extends AbstractPaneBase2 implements Observer {
 				setGraphic(null);
 			}
 		}
+
 	}
 
 	public TableDTO getTable() {
@@ -790,7 +783,7 @@ public class TablePane2 extends AbstractPaneBase2 implements Observer {
 
 	@Override
 	public void update(Observable o, Object arg) {
-		if(controller.getScene().getRoot() == this) {
+		if (controller.getScene().getRoot() == this) {
 			refresh();
 		}
 	}

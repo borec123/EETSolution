@@ -23,7 +23,7 @@ public class SoundPlayer /* extends JFrame */ {
 		 */
 		try {
 			// Open an audio input stream.
-			URL url = new SoundPlayer().getClass().getClassLoader().getResource("sound/bubbles.wav");
+			URL url = new SoundPlayer().getClass().getClassLoader().getResource("sound/DeskBell.wav");
 			AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
 			// Get a sound clip resource.
 			clip = AudioSystem.getClip();
