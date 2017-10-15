@@ -31,6 +31,10 @@ public class AppPropertiesProxy {
 	public static String[] getRmiListeners() {
 		if (rmiListeners == null) {
 			String s = (String) get("rmi.listeners");
+			if(s == null ) {
+				rmiListeners = AppProperties.getProperties().getRmiListeners();
+				return rmiListeners;
+			}
 			rmiListeners = s.split(",");
 		}
 

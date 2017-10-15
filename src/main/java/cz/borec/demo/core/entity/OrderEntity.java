@@ -38,7 +38,7 @@ public class OrderEntity extends BaseEntity<Long> {
 	@Id
     //@GeneratedValue(strategy = GenerationType.AUTO)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="seq")
-	@SequenceGenerator(name="seq", sequenceName="ORDER_T_SEQUENCE")
+	@SequenceGenerator(name="seq", sequenceName="ORDER_T_SEQUENCE", allocationSize=1)
     @Column(name="id")
     private Long id;
 

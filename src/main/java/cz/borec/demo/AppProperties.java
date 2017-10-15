@@ -5,6 +5,12 @@ import java.util.Properties;
 
 import cz.borec.demo.gui.controls.AppPropertiesProxy;
 
+/**
+ * 
+ * @Deprecated Use AppPropertiesProxy instead.
+ *
+ */
+@Deprecated
 public class AppProperties extends Properties {
 
 	private static final long serialVersionUID = 1993452751869853641L;

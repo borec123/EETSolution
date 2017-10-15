@@ -362,9 +362,40 @@ public class TablePane2 extends AbstractPaneBase2 implements Observer {
 			@Override
 			public void handle(ActionEvent arg0) {
 				if (validateCount(orderDTO)) {
-					orderDTO.setState(OrderState.STORNO);
+/*					orderDTO.setState(OrderState.STORNO);
+					orderDTO.setStorno(true);
 					controller.getModel().updateOrder(orderDTO);
 					refreshLabel();
+					notifyRMIListeners();
+*/					
+					OrderDTO o = orderDTO;
+					if(!o.isPayed()) {
+						if(!(o.getFIK() == null && !o.isStorno())) {
+							AlertHelper.showInfoDialog("Objedn\u00E1vka nen\u00ED zaplacena.", "A nen\u00ED ve stavu hodn\u00E9ho stornov\u00E1n\u00ED.");
+							return;
+						}
+					}
+					if(o.getFIK() == null) {
+						AlertHelper.showInfoDialog("Objedn\u00E1vka nen\u00ED odesl\u00E1na na finan\u010Dn\u00ED spr\u00E1vu..", "");
+					}
+					if(o.isStorno()) {
+						AlertHelper.showInfoDialog("Objedn\u00E1vka je ji\u017E stornov\u00E1na..", "");
+						return;
+					} 
+					if(AlertHelper.showConfirmDialog("Stornovat objedn\u00E1vku ?", "")) {
+						
+						boolean result = true;
+						if(o.getFIK() != null) {
+							result = fIClient.callFIPublic(o, true);
+						}
+						orderDTO.setState(OrderState.STORNO);
+						controller.updateOrderWithoutCheck(o);
+						if(!result) {
+							AlertHelper.showInfoDialog("Chyba b\u011Bhem stornov\u00E1n\u00ED objedn\u00E1vky na finan\u010Dn\u00ED spr\u00E1v\u011B.", "");
+						}
+						refreshLabel();
+						notifyRMIListeners();
+					}
 				}
 			}
 		});
@@ -448,11 +479,11 @@ public class TablePane2 extends AbstractPaneBase2 implements Observer {
 					"\u00DA\u010Dtenku lze stornovat v sekci 'Historie'.");
 			return b;
 		}
-/*		b = orderDTO.getState() == OrderState.PREPARING;
+		b = orderDTO.getState() == OrderState.PREPARING;
 		if (!b) {
 			AlertHelper.showInfoDialog("Objedn\u00E1vka u\u017E byla expedov\u00E1na.",
 					"\u00DA\u010Dtenku lze stornovat v sekci 'Historie'.");
-		}*/
+		}
 		return b;
 	}
 
