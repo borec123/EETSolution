@@ -137,6 +137,7 @@ public class AppProperties extends Properties {
 	public String[] getRmiListeners() {
 		if (rmiListeners == null) {
 			String s = (String) get("rmi.listeners");
+			if(s == null) return new String[0];
 			rmiListeners = s.split(",");
 		}
 

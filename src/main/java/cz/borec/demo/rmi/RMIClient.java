@@ -5,6 +5,7 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
+import cz.borec.demo.Constants;
 import cz.borec.demo.gui.controls.AppPropertiesProxy;
 
 public class RMIClient {
@@ -20,10 +21,12 @@ public class RMIClient {
 	}
 	
 	public static void notifyRMIListeners() {
-				String[] listeners = AppPropertiesProxy.getRmiListeners();
-				for (String string : listeners) {
-					notifyListener(string);
-				}
+		if (Boolean.parseBoolean(AppPropertiesProxy.get(Constants.CONFIG_IS_MULTINODED))) {
+			String[] listeners = AppPropertiesProxy.getRmiListeners();
+			for (String string : listeners) {
+				notifyListener(string);
+			}
+		}
 	}
 	
 	
