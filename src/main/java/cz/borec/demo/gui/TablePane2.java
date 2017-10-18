@@ -18,12 +18,10 @@ import java.util.Observer;
 
 import javax.xml.bind.JAXBException;
 
-import cz.borec.demo.AppProperties;
 import cz.borec.demo.Constants;
 import cz.borec.demo.core.dto.CategoryDTO;
 import cz.borec.demo.core.dto.OrderDTO;
 import cz.borec.demo.core.dto.OrderItemDTO;
-import cz.borec.demo.core.dto.ProductDTO;
 import cz.borec.demo.core.dto.TableDTO;
 import cz.borec.demo.core.entity.OrderState;
 import cz.borec.demo.core.entity.SalesProductEntity;
@@ -34,6 +32,7 @@ import cz.borec.demo.gui.controls.ButtonSizeUtils;
 import cz.borec.demo.gui.controls.CategoryButton;
 import cz.borec.demo.gui.controls.DiscountPane;
 import cz.borec.demo.gui.controls.LiveButton;
+import cz.borec.demo.gui.controls.LiveButton1;
 import cz.borec.demo.gui.controls.ProductButton;
 import cz.borec.demo.gui.controls.Settings;
 import cz.borec.demo.gui.controls.SubCategoryButton;
@@ -42,7 +41,6 @@ import cz.borec.demo.gui.utils.GridPaneFiller;
 import cz.borec.demo.rmi.ObserverRMIImpl;
 import cz.borec.demo.rmi.RMIClient;
 import cz.borec.demo.util.StringUtils;
-import cz.borec.demo.ws.FIClient;
 import cz.borec.demo.ws.FIClientOpenEET;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -50,9 +48,9 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -60,15 +58,11 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
 import javafx.util.Callback;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.control.ScrollPane;
 
 public class TablePane2 extends AbstractPaneBase2 implements Observer {
 
@@ -488,24 +482,31 @@ public class TablePane2 extends AbstractPaneBase2 implements Observer {
 	}
 
 	protected void createButtons(HBox hbox) {
-		/*
-		 * LiveButton buttonAdd = new LiveButton("Odeslat");
-		 * buttonAdd.setTooltip(new Tooltip(
-		 * "Pouze odeslat na finan\u010Dn\u00ED spr\u00E1vu bez tisku."));
-		 */ // buttonAdd.setId("subCategory");
-		LiveButton buttonPrint = new LiveButton("Tisknout");
-		LiveButton buttonComplete = new LiveButton("Ukon\u010Dit objedn\u00E1vku");
-		/*
-		 * buttonAdd.setOnAction(new EventHandler<ActionEvent>() {
-		 * 
-		 * @Override public void handle(ActionEvent arg0) {
-		 * 
-		 * if (validateCount(orderDTO)) { send(); }
-		 * 
-		 * }
-		 * 
-		 * });
-		 */ buttonPrint.setOnAction(new EventHandler<ActionEvent>() {
+		
+		LiveButton buttonAdd = new LiveButton("EET");
+		 buttonAdd.setTooltip(new Tooltip(
+		 "Pouze odeslat na finan\u010Dn\u00ED spr\u00E1vu bez tisku."));
+		  
+		
+		// buttonAdd.setId("subCategory");
+		
+		LiveButton buttonPrint = new LiveButton1("Zaplatit");
+		
+		//LiveButton buttonComplete = new LiveButton("Ukon\u010Dit objedn\u00E1vku");
+		
+		
+		buttonAdd.setOnAction(new EventHandler<ActionEvent>() {
+		
+		@Override public void handle(ActionEvent arg0) {
+		
+		if (validateCount(orderDTO)) { send(); }
+		
+		}
+		
+		});
+		  
+		
+		buttonPrint.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent arg0) {
@@ -516,7 +517,10 @@ public class TablePane2 extends AbstractPaneBase2 implements Observer {
 				}
 			}
 		});
-		buttonComplete.setOnAction(new EventHandler<ActionEvent>() {
+		 
+		 
+		 
+/*		buttonComplete.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
@@ -525,11 +529,11 @@ public class TablePane2 extends AbstractPaneBase2 implements Observer {
 					newOrder();
 				}
 			}
-		});
+		});*/
 
-		// hbox.getChildren().add(buttonAdd);
+		 hbox.getChildren().add(buttonAdd);
 		hbox.getChildren().add(buttonPrint);
-		hbox.getChildren().add(buttonComplete);
+		//hbox.getChildren().add(buttonComplete);
 
 	}
 

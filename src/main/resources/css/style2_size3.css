@@ -24,6 +24,17 @@
     -fx-padding: 10 20 10 20;
 }
 
+#LiveButton1 {
+    -fx-background-color: #812BF2; /* #462DFF; */
+    -fx-background-radius: 5;
+    -fx-background-insets: 0,1,2,3,0;
+    -fx-text-fill: yellow;
+    -fx-font-family: "Arial";
+    -fx-font-size: 16px;
+    -fx-padding: 10 20 10 20;
+}
+
+
 
 #table{
 	/* -fx-background-image: url('file:///C:/Users/Hanka/Pictures/wood.jpg')"); 
@@ -79,8 +90,10 @@
 }
 
 #product {
-    -fx-background-color: #5e71ff,
+    -fx-background-color: /* #00AFF0;  */
+    #5e71ff,
     linear-gradient(#8895f7, #5d6bd8);
+   
     -fx-background-radius: 0;
     -fx-background-insets: 0,0,0,0,0;
     -fx-text-fill: white;
