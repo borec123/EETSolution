@@ -1,0 +1,1 @@
+mvn clean install:install-file -Dfile=.\lib\openeet-lite-java8-20160816-2119.jar  -DgroupId=openeet -DartifactId=openeet -Dversion=1.0.0 -Dpackaging=jar

@@ -1,0 +1,1 @@
+mvn clean install:install-file -Dfile=C:\Users\phecz\Downloads\openeet-2.0.0.jar  -DgroupId=openeet -DartifactId=openeet -Dversion=2.0.0 -Dpackaging=jar
